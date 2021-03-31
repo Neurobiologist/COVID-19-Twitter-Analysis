@@ -9,33 +9,39 @@ from collections import Counter
 import gzip
 import json
 import os
-import pandas as pd
 import pickle as pkl
 from pprint import pprint as pp
 
-# Test file access
-root_dir = '/projectnb/caad/meganmp/COVID-19-TweetIDs-master/2020-01/'
+# Define directories
+root_dir = '/projectnb/caad/meganmp/COVID-19-TweetIDs-master/'
+
+# Initialize variables
 monthly_totals = dict()
 
+# Traverse the data
 for sub_dir, dirs, files in os.walk(root_dir):
     dirs.sort()
     files.sort()
     for date_dir in sorted(dirs):
         print(date_dir)
-    for file in sorted(files):
-        file_extension = os.path.splitext(file)[1]
-        if file_extension == '.gz':
-            print(file)
-            tweets = []
-            tweet_num = 0
-            with gzip.open(os.path.join(sub_dir,file), 'rb') as gzip_file:
-                for line in gzip_file:
-                    line = line.rstrip()
-                    if line:
-                        tweet_content = json.loads(line)
-                        tweets.append(tweet_content)
-                        tweet_num += 1
-                monthly_totals[date_dir] = tweet_num
+        tweets = []
+        tweet_num = 0
+        for file in sorted(os.listdir(os.path.join(root_dir, date_dir))):
+            file_extension = os.path.splitext(file)[1]
+            if file_extension == '.gz':
+                print(file)
+                with gzip.open(os.path.join(sub_dir, date_dir, file), 'rb') as gzip_file:
+                    for line in gzip_file:
+                        line = line.rstrip()
+                        if line:
+                            tweet_content = json.loads(line)
+                            if tweet_content['lang'] != 'en':
+                                continue
+                            tweets.append(tweet_content)
+                            tweet_num += 1
+        monthly_totals[date_dir] = tweet_num
+        break
+    break
                         
             
 #print(json.dumps(tweets, indent=4))
