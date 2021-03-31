@@ -38,22 +38,25 @@ for sub_dir, dirs, files in os.walk(root_dir):
                 monthly_totals[date_dir] = tweet_num
                         
             
-print(json.dumps(tweets, indent=4))
-print(monthly_totals)
+#print(json.dumps(tweets, indent=4))
+#print(monthly_totals)
+
+with open('2020-01-tweets.json', 'w', encoding='utf-8') as f:
+    json.dump(tweets, f, ensure_ascii=False, indent=4)
 
 # Save monthly totals dictionary
-f = open("monthly_totals.pkl","wb")
-pkl.dump(monthly_totals,f)
-f.close()
+f2 = open("monthly_totals.pkl","wb")
+pkl.dump(monthly_totals,f2)
+f2.close()
 
 c = Counter(x['user']['location'] for x in tweets)
 location_totals = dict(c)
 pp(location_totals)
 
 # Save location totals dictionary
-f2 = open("location_totals.pkl","wb")
-pkl.dump(location_totals,f2)
-f2.close()
+f3 = open("location_totals.pkl","wb")
+pkl.dump(location_totals,f3)
+f3.close()
             
         
         
