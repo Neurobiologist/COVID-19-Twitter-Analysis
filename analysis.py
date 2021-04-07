@@ -2,18 +2,20 @@
 """
 COVID-19 Twitter Analysis
 Megan M. Parsons | meganmp@bu.edu
+INSTRUCTIONS: To run, type into terminal: ./analysis.py >> out.txt 
 """
 
 # Imports
 from collections import Counter
 import gzip
 import json
+import jsonlines
 import os
-import pickle as pkl
 from pprint import pprint as pp
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/COVID-19-TweetIDs-master/'
+root_dir = '/projectnb/caad/meganmp/data-subset/'	# Testing:  | Analysis: '/projectnb/caad/meganmp/COVID-19-TweetIDs-master'
+save_dir = 'projectnb/caad/meganmp/english-tweets/'
 
 # Initialize variables
 monthly_totals = dict()
@@ -30,39 +32,48 @@ for sub_dir, dirs, files in os.walk(root_dir):
             file_extension = os.path.splitext(file)[1]
             if file_extension == '.gz':
                 print(file)
-                with gzip.open(os.path.join(sub_dir, date_dir, file), 'rb') as gzip_file:
-                    for line in gzip_file:
-                        line = line.rstrip()
-                        if line:
-                            tweet_content = json.loads(line)
-                            if tweet_content['lang'] != 'en':
-                                continue
-                            tweets.append(tweet_content)
-                            tweet_num += 1
+                with gzip.open(os.path.join(save_dir, date_dir, file), 'w') as file_out:
+                    with gzip.open(os.path.join(sub_dir, date_dir, file), 'rb') as gzip_file:
+                        for line in gzip_file:
+                            line = line.rstrip()
+                            if line:
+                                tweet_content = json.loads(line)
+                                    if tweet_content['lang'] == 'en':	# Filter out non-English Tweets
+                                        file_out.write(line)
+                                        #tweets.append(tweet_content)
+                                        tweet_num += 1
         monthly_totals[date_dir] = tweet_num
-        break
-    break
+        print(monthly_totals)
+        #break
+    print('--------------- NEXT DATE DIRECTORY ---------------------')
+    #break
                         
             
 #print(json.dumps(tweets, indent=4))
 #print(monthly_totals)
+print('TRAVERSING DATA COMPLETE')
 
-with open('2020-01-tweets.json', 'w', encoding='utf-8') as f:
-    json.dump(tweets, f, ensure_ascii=False, indent=4)
+#with open('/projectnb/caad/meganmp/analysis/2020-01-tweets-sub.json', 'w', encoding='utf-8') as f:
+#    json.dump(tweets, f, ensure_ascii=False, indent=4)
+#with jsonlines.open('/projectnb/caad/meganmp/analysis/20210406_tweets.jsonl', mode='w') as writer:
+    #writer.write_all(tweets)
 
 # Save monthly totals dictionary
-f2 = open("monthly_totals.pkl","wb")
-pkl.dump(monthly_totals,f2)
-f2.close()
+print('Saving monthly totals')
+with open('/projectnb/caad/meganmp/analysis/monthly_totals-sub.json', 'w', encoding='utf-8') as f:
+    json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
 
+print('Initializing Counter')
 c = Counter(x['user']['location'] for x in tweets)
+print('Counter Complete')
 location_totals = dict(c)
-pp(location_totals)
+print('Counter converted to dictionary')
+#pp(location_totals)
 
 # Save location totals dictionary
-f3 = open("location_totals.pkl","wb")
-pkl.dump(location_totals,f3)
-f3.close()
+print('Saving location totals')
+with open('/projectnb/caad/meganmp/analysis/location_totals-sub.json', 'w', encoding='utf-8') as f:
+    json.dump(location_totals, f, ensure_ascii=False, indent=4)
             
         
         
