@@ -14,8 +14,8 @@ import os
 from pprint import pprint as pp
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/data-subset/'	# Testing:  | Analysis: '/projectnb/caad/meganmp/COVID-19-TweetIDs-master'
-save_dir = 'projectnb/caad/meganmp/english-tweets/'
+root_dir = '/projectnb/caad/meganmp/COVID-19-TweetIDs-master'	# Testing: '/projectnb/caad/meganmp/data-subset/' | Analysis: 
+save_dir = '/projectnb/caad/meganmp/english-tweets/'
 
 # Initialize variables
 monthly_totals = dict()
@@ -33,15 +33,16 @@ for sub_dir, dirs, files in os.walk(root_dir):
             if file_extension == '.gz':
                 print(file)
                 with gzip.open(os.path.join(save_dir, date_dir, file), 'w') as file_out:
-                    with gzip.open(os.path.join(sub_dir, date_dir, file), 'rb') as gzip_file:
+                    with gzip.open(os.path.join(sub_dir, date_dir, file), 'r') as gzip_file:
                         for line in gzip_file:
                             line = line.rstrip()
                             if line:
                                 tweet_content = json.loads(line)
-                                    if tweet_content['lang'] == 'en':	# Filter out non-English Tweets
-                                        file_out.write(line)
-                                        #tweets.append(tweet_content)
-                                        tweet_num += 1
+                                if tweet_content['lang'] == 'en':	# Filter out non-English Tweets
+                                    file_out.write(line)
+                                    #tweets.append(tweet_content)
+                                    tweet_num += 1
+                
         monthly_totals[date_dir] = tweet_num
         print(monthly_totals)
         #break
