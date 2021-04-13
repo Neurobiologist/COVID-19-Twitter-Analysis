@@ -61,7 +61,7 @@ print('TRAVERSING DATA COMPLETE')
 
 # Save monthly totals dictionary
 print('Saving monthly totals')
-with open('/projectnb/caad/meganmp/analysis/monthly_totals-sub.json', 'w', encoding='utf-8') as f:
+with open('/projectnb/caad/meganmp/analysis/monthly_totals-english.json', 'w', encoding='utf-8') as f:
     json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
 
 print('Initializing Counter')
@@ -73,7 +73,7 @@ print('Counter converted to dictionary')
 
 # Save location totals dictionary
 print('Saving location totals')
-with open('/projectnb/caad/meganmp/analysis/location_totals-sub.json', 'w', encoding='utf-8') as f:
+with open('/projectnb/caad/meganmp/analysis/location_totals-english.json', 'w', encoding='utf-8') as f:
     json.dump(location_totals, f, ensure_ascii=False, indent=4)
             
         
