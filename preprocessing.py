@@ -2,7 +2,7 @@
 """
 COVID-19 Twitter Analysis
 Megan M. Parsons | meganmp@bu.edu
-INSTRUCTIONS: To run, type into terminal: ./analysis.py >> out.txt 
+INSTRUCTIONS: To run, type into terminal: ./preprocessing.py >> out.txt 
 """
 
 # Imports
@@ -14,8 +14,8 @@ import os
 from pprint import pprint as pp
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/COVID-19-TweetIDs-master'	# Testing: '/projectnb/caad/meganmp/data-subset/' | Analysis: 
-save_dir = '/projectnb/caad/meganmp/english-tweets/'
+root_dir = '/projectnb/caad/meganmp/data/COVID-19-TweetIDs-master'	# Testing: '/projectnb/caad/meganmp/data/data-subset/' | Analysis: 
+save_dir = '/projectnb/caad/meganmp/data/english-tweets' 
 
 # Initialize variables
 monthly_totals = dict()
@@ -39,7 +39,7 @@ for sub_dir, dirs, files in os.walk(root_dir):
                             if line:
                                 tweet_content = json.loads(line)
                                 if tweet_content['lang'] == 'en':	# Filter out non-English Tweets
-                                    file_out.write(line)
+                                    file_out.write(line + '\n')
                                     #tweets.append(tweet_content)
                                     tweet_num += 1
                 
@@ -54,11 +54,6 @@ for sub_dir, dirs, files in os.walk(root_dir):
 #print(monthly_totals)
 print('TRAVERSING DATA COMPLETE')
 
-#with open('/projectnb/caad/meganmp/analysis/2020-01-tweets-sub.json', 'w', encoding='utf-8') as f:
-#    json.dump(tweets, f, ensure_ascii=False, indent=4)
-#with jsonlines.open('/projectnb/caad/meganmp/analysis/20210406_tweets.jsonl', mode='w') as writer:
-    #writer.write_all(tweets)
-
 # Save monthly totals dictionary
 print('Saving monthly totals')
 with open('/projectnb/caad/meganmp/analysis/monthly_totals-english.json', 'w', encoding='utf-8') as f:
@@ -69,12 +64,14 @@ c = Counter(x['user']['location'] for x in tweets)
 print('Counter Complete')
 location_totals = dict(c)
 print('Counter converted to dictionary')
-#pp(location_totals)
+pp(location_totals)
 
 # Save location totals dictionary
 print('Saving location totals')
-with open('/projectnb/caad/meganmp/analysis/location_totals-english.json', 'w', encoding='utf-8') as f:
-    json.dump(location_totals, f, ensure_ascii=False, indent=4)
+with open('/projectnb/caad/meganmp/analysis/location_totals-english.json', 'w') as f2:
+    json.dump(location_totals, f2)
+
+print('Preprocessing Complete')
             
         
         
