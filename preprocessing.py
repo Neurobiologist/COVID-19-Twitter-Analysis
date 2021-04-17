@@ -44,11 +44,7 @@ for sub_dir, dirs, files in os.walk(root_dir):
                                     tweet_num += 1
                 
         monthly_totals[date_dir] = tweet_num
-        print(monthly_totals)
-        #break
-    print('--------------- NEXT DATE DIRECTORY ---------------------')
-    #break
-                        
+        print(monthly_totals)             
             
 #print(json.dumps(tweets, indent=4))
 #print(monthly_totals)
