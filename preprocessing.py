@@ -39,7 +39,7 @@ for sub_dir, dirs, files in os.walk(root_dir):
                             if line:
                                 tweet_content = json.loads(line)
                                 if tweet_content['lang'] == 'en':	# Filter out non-English Tweets
-                                    file_out.write(line + '\n')
+                                    file_out.write(line + b'\n')
                                     #tweets.append(tweet_content)
                                     tweet_num += 1
                 

@@ -5,3 +5,4 @@
 *.swo
 gzip
 archive/*
+carmen-python/

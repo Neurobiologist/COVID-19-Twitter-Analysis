@@ -10,14 +10,16 @@ import gzip
 import json
 import carmen
 
+count = 0
 tweet_json = '/projectnb/caad/meganmp/data/english-tweets/2020-01/coronavirus-tweet-id-2020-01-31-22.jsonl.gz'
 with gzip.open(tweet_json, 'r') as gzip_file:
     for line in gzip_file:
         line = line.rstrip()
         if line:
-            print(line)
             tweet = json.loads(line)
             resolver = carmen.get_resolver()
             resolver.load_locations()
             location = resolver.resolve_tweet(tweet)
-            print(location)
+            if location[1].country == 'United States':
+                count += 1
+                
