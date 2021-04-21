@@ -9,6 +9,7 @@ print('Load imports')
 import gzip
 import json
 import carmen
+import os
 
 # Define directories
 root_dir = '/projectnb/caad/meganmp/data/english-tweets'	 
@@ -39,10 +40,14 @@ for sub_dir, dirs, files in os.walk(root_dir):
                                 resolver = carmen.get_resolver()
                                 resolver.load_locations()
                                 location = resolver.resolve_tweet(tweet)
-                                if location[1].country == 'United States':
-                                    file_out.write(line + b'\n')
-                                    count += 1
-                                    tweet_num += 1
+                                print(location)
+                                try:
+                                    if location[1].country == 'United States':
+                                        file_out.write(line + b'\n')
+                                        count += 1
+                                        tweet_num += 1
+                                except:
+                                    continue
         monthly_totals[date_dir] = tweet_num
         print(monthly_totals)
                 
