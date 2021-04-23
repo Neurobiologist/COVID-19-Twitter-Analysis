@@ -8,30 +8,14 @@ import os
 from datetime import datetime
 import sys
 import logging
- 
-#class Logger:
- 
-    #def __init__(self, filename):
-        #self.console = sys.stdout
-        #self.file = open(filename, 'w')
- 
-    #def write(self, message):
-        #self.console.write(message)
-        #self.file.write(message)
- 
-    #def flush(self):
-        #self.console.flush()
-        #self.file.flush()
 
 def main():
     # Define directories
-    root_dir = '/projectnb/caad/meganmp/data/english-tweets'
-    save_dir = '/projectnb/caad/meganmp/data/us-tweets'
+    root_dir = '/projectnb/caad/meganmp/data/one-day'     #'/projectnb/caad/meganmp/data/english-tweets'
+    save_dir = '/projectnb/caad/meganmp/data/one-day-results'
 
     # Create log
-    #path = '/projectnb/caad/meganmp/analysis/us-tweets-log.txt'
-    #sys.stdout = Logger(path)
-    logging.basicConfig(filename='location-us.log', level=logging.INFO, format='%(levelname)s\t%(message)s')
+    logging.basicConfig(filename='data-24h-4core-test.log', level=logging.DEBUG, format='%(levelname)s\t%(asctime)s\t%(message)s')
 
     # Initialize variables
     monthly_totals = dict()
@@ -58,33 +42,32 @@ def main():
                                 line = line.rstrip()
                                 if line:
                                     tweet = json.loads(line)
-                                    #resolver = carmen.get_resolver()
-                                    #resolver.load_locations()
-                                    #location = resolver.resolve_tweet(tweet)
+                                    resolver = carmen.get_resolver()
+                                    resolver.load_locations()
+                                    location = resolver.resolve_tweet(tweet)
                                     try:
-                                        #if location[1].country == 'United States':
-                                         if tweet['place']['country_code'] == 'US':
+                                        if location[1].country == 'United States':
                                             file_out.write(line + b'\n')
                                             tweet_num += 1
                                     except:
                                         continue
                             end_4 = datetime.now()
                             time_4 = end_4 - start_4
-                            logging.debug('Time4 = %s', time_4)
+                            logging.info('Time4 = %s', time_4)
             monthly_totals[date_dir] = tweet_num
             end_3 = datetime.now()
             time_3 = end_3 - start_3
-            logging.debug('Time3 = %s', time_3)
+            logging.info('Time3 = %s', time_3)
         end_2 = datetime.now()
         time_2 = end_2 - start_2
-        logging.debug('Time2 = %s', time_2)
+        logging.info('Time2 = %s', time_2)
     end_1 = datetime.now()
     time_1 = end_1 - start_1
-    logging.debug('Time1 = %s', time_1)
+    logging.info('Time1 = %s', time_1)
                 
     # Save monthly totals dictionary
     print('Saving monthly totals')
-    with open('/projectnb/caad/meganmp/analysis/monthly_totals-us-tweets.json', 'w', encoding='utf-8') as f:
+    with open('/projectnb/caad/meganmp/analysis/one-day-4core-total.json', 'w', encoding='utf-8') as f:
         json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
     
     logging.info('Preprocessing Complete')
