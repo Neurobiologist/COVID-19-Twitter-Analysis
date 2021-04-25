@@ -15,13 +15,16 @@
 #$ -m beas
 
 # Give job a name
-#$ -N data-24h-4core-test
+#$ -N tweets_jan
 
 # Combine output and error files into a single file
 #$ -j y
 
 # Specify the output file name
-#$ -o data-24h-4core-test.qlog
+#$ -o tweets_jan.qlog
+
+# Task Numbers
+#$ -t 21-31
 
 # Keep track of information related to the current job
 echo "=========================================================="
@@ -31,4 +34,4 @@ echo "Job ID : $JOB_ID  $SGE_TASK_ID"
 echo "=========================================================="
 
 module load python3
-python /projectnb/caad/meganmp/analysis/location-filter.py
+python /projectnb/caad/meganmp/analysis/location-filter_jan.py

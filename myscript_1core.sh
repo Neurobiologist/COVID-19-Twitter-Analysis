@@ -9,19 +9,19 @@
 #$ -l h_rt=24:00:00
 
 # Request 4 cores
-#$ -pe omp 4
+#$ -pe omp 1
 
 # Send an email when the job finishes or if it is aborted.
 #$ -m beas
 
 # Give job a name
-#$ -N data-24h-4core-test
+#$ -N data-24h-1core-test
 
 # Combine output and error files into a single file
 #$ -j y
 
 # Specify the output file name
-#$ -o data-24h-4core-test.qlog
+#$ -o data-24h-1core-test.qlog
 
 # Keep track of information related to the current job
 echo "=========================================================="
