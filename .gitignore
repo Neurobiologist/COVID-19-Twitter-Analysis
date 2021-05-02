@@ -7,3 +7,5 @@ gzip
 archive/*
 carmen-python/
 google_nlp/
+*.qlog
+*.log
