@@ -15,11 +15,11 @@ def main():
     DN = "%02d" % DN
 
     # Define directories
-    root_dir = '/projectnb/caad/meganmp/data/english-tweets'     #'/projectnb/caad/meganmp/data/english-tweets'
-    save_dir = '/projectnb/caad/meganmp/data/test' # MODIFY
+    root_dir = '/projectnb/caad/meganmp/data/english-tweets'
+    save_dir = '/projectnb/caad/meganmp/data/usa-tweets'
 
     # Create log
-    logging.basicConfig(filename='data-test.log', level=logging.DEBUG, format='%(levelname)s\t%(asctime)s\t%(message)s') # MODIFY
+    logging.basicConfig(filename='data-jun.log', level=logging.DEBUG, format='%(levelname)s\t%(asctime)s\t%(message)s') # MODIFY
 
     # Initialize variables
     monthly_totals = dict()
@@ -32,7 +32,7 @@ def main():
         files.sort()
         start_2 = datetime.now()
         for date_dir in sorted(dirs):
-            if date_dir != '2020-01':
+            if date_dir != '2020-06':  #MODIFY
                 continue
             logging.info('Processing: %s', date_dir)
             tweets = []
@@ -41,7 +41,7 @@ def main():
             for file in sorted(os.listdir(os.path.join(root_dir, date_dir))):
                 file_extension = os.path.splitext(file)[1]
                 if file_extension == '.gz':
-                    day_string = "coronavirus-tweet-id-2020-01-" + DN
+                    day_string = "coronavirus-tweet-id-2020-06-" + DN  #MODIFY
                     if day_string not in file:
                         continue
                     with gzip.open(os.path.join(save_dir, date_dir, file), 'w') as file_out:
@@ -76,7 +76,7 @@ def main():
                 
     # Save monthly totals dictionary
     print('Saving monthly totals')
-    with open('/projectnb/caad/meganmp/analysis/test.json', 'w', encoding='utf-8') as f:
+    with open('/projectnb/caad/meganmp/analysis/preprocessing/jun.json', 'w', encoding='utf-8') as f:
         json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
     
     logging.info('Preprocessing Complete')
