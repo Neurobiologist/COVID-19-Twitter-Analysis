@@ -38,22 +38,32 @@ def make_datetime_dir(analysis_dir):
             print("Creation of the directory %s failed" % save_dir)
     return save_dir
 
+def serialize(line):
+    ''' Load, serialize, and preprocess Tweet'''
+    # Decode Binary and Load into Python Dictionary
+    tweet_dict = json.loads(line)
+    
+    # Preprocess json_obj
+    tweet = preprocess_tweet(tweet_dict)
+    
+    return tweet
 
-def preprocess_tweet(status):
-    ''' Return full text of tweet '''
-    if hasattr(status, 'retweeted_status'):   # Check if retweet
+
+def preprocess_tweet(tweet):
+    ''' Return full text of cleaned up tweet '''
+    if 'retweeted_status' in tweet.keys():   # Check if retweet
         try:
-            status = status.retweeted_status.text
-        except AttributeError:
-            status = status.retweeted_status.full_text
+            tweet = tweet['retweeted_status']['text']
+        except KeyError:
+            tweet = tweet['retweeted_status']['full_text']
     else:
         try:
-            status = status.extended_tweet.full_text
-        except AttributeError:
-            status = status.full_text
+            tweet = tweet['extended_tweet']['full_text']
+        except KeyError:
+            tweet = tweet['full_text']
 
     # Lowercase
-    status.lower()
+    tweet.lower()
 
     #
 
@@ -210,9 +220,9 @@ def main():
                         for line in gzip_file:
                             line = line.rstrip()
                             if line:
-                                tweet = json.loads(line)
+                                # Load, serialize, and preprocess line
+                                tweet = serialize(line)
                                 
-                                tweet = preprocess_tweet(tweet)
                                 #if any(keyword in tweet for keyword in (
                                         #'COVID', 'covid', 'China virus', 'coronavirus')):
                         
