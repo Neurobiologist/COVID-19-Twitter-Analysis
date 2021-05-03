@@ -2,14 +2,16 @@
 import errno
 import gzip
 import json
-from datetime import datetime
-import sys
 import logging
-import os
-import pandas as pd
-from pandas.plotting import register_matplotlib_converters
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import pandas as pd
+import re
+import sys
+from datetime import datetime
+from pandas.plotting import register_matplotlib_converters
+
 # Import Google Client Library
 from google.cloud import language
 # Import COVID-19 Data API
@@ -38,15 +40,13 @@ def make_datetime_dir(analysis_dir):
             print("Creation of the directory %s failed" % save_dir)
     return save_dir
 
+
 def serialize(line):
     ''' Load, serialize, and preprocess Tweet'''
     # Decode Binary and Load into Python Dictionary
     tweet_dict = json.loads(line)
     
-    # Preprocess json_obj
-    tweet = preprocess_tweet(tweet_dict)
-    
-    return tweet
+    return tweet_dict
 
 
 def preprocess_tweet(tweet):
@@ -61,18 +61,37 @@ def preprocess_tweet(tweet):
             tweet = tweet['extended_tweet']['full_text']
         except KeyError:
             tweet = tweet['full_text']
+            
+    # Clean Tweet
+    tweet = clean_tweet(tweet)
+    
+    return tweet
 
+
+def clean_tweet(tweet):
+    ''' Return cleaned up Tweet for Sentiment Analysis'''
     # Lowercase
-    tweet.lower()
+    tweet = tweet.lower()
 
-    #
-
-    return status
+    # Remove URLs
+    tweet = re.sub(r'https?:\/\/\S+', '', tweet)
+    tweet = re.sub(r'www.[\S]+', '', tweet)
+    
+    # Remove usernames
+    tweet = re.sub(r'@[\S_]+', '', tweet)
+    
+    # Remove '#' symbol in hashtags
+    tweet = re.sub('#', '', tweet)
+    
+    # Remove extraneous whitespace
+    tweet = re.sub('[\t\n\r\f\v]', '', tweet)
+    
+    return tweet
 
 
 def sentiment_analysis(tweet):
     ''' Sentiment analysis on input '''
-    document = language.types.Document(
+    document = language.Document(
         content=tweet,
         type='PLAIN_TEXT')
 
@@ -86,13 +105,25 @@ def sentiment_analysis(tweet):
     return sentiment
 
 
-def evaluate(score):
-    ''' Sentiment analysis interpretation '''
-    if score > 0.2:
+def evaluate(score, mag):
+    ''' Sentiment analysis thresholding and interpretation '''
+    # Strongly Positive
+    if score > 0.2 and mag > 2.0:
+        return '++'
+    # Weakly Positive
+    if score > 0.2 and mag < 2.0:
         return '+'
-    if -0.2 <= score <= 0.2:
+    # Neutral
+    if -0.2 <= score <= 0.2 and mag < 2.0:
         return ' '
-    return 'v'
+    # Mixed
+    if -0.2 <= score <= 0.2 and mag > 2.0:
+        return 'Mixed'
+    # Weakly Negative
+    if score < -0.2 and mag < 2.0:
+        return '-'
+    # Strongly Negative
+    return '--'
 
 
 def mkr(interp):
@@ -151,11 +182,6 @@ def visualize(tweet_data, covid_data):
     ''' Create visualizations of data '''
     tweet_polarity(tweet_data)    # Overview of Tweet Data
     covid_plot(tweet_data, covid_data)
-
-
-def select_fn(acct):
-    ''' Administrivia for acct '''
-    print(acct.get())
 
 
 def main():
@@ -221,11 +247,16 @@ def main():
                             line = line.rstrip()
                             if line:
                                 # Load, serialize, and preprocess line
-                                tweet = serialize(line)
+                                tweet_obj = serialize(line)
                                 
+                                # Preprocess json_obj
+                                tweet = preprocess_tweet(tweet_obj)
                                 #if any(keyword in tweet for keyword in (
                                         #'COVID', 'covid', 'China virus', 'coronavirus')):
                         
+                                # To obtain hashtag list:
+                                # hashtags =  tweet_obj['entities']['hashtags'][0]['text']
+                                
                                 # Sentiment analysis
                                 sentiment = sentiment_analysis(tweet)
                     
