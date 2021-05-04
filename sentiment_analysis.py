@@ -32,7 +32,9 @@ COVID = COVID19Py.COVID19(
 
 def make_datetime_dir(analysis_dir):
     '''Create a subdirectory in analysis_dir using date-time naming convention'''
-    save_dir = os.path.join(analysis_dir, datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+    save_dir = os.path.join(
+        analysis_dir,
+        datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     try:
         os.makedirs(save_dir)
     except OSError as e:
@@ -45,7 +47,7 @@ def serialize(line):
     ''' Load, serialize, and preprocess Tweet'''
     # Decode Binary and Load into Python Dictionary
     tweet_dict = json.loads(line)
-    
+
     return tweet_dict
 
 
@@ -61,10 +63,10 @@ def preprocess_tweet(tweet):
             tweet = tweet['extended_tweet']['full_text']
         except KeyError:
             tweet = tweet['full_text']
-            
+
     # Clean Tweet
     tweet = clean_tweet(tweet)
-    
+
     return tweet
 
 
@@ -76,16 +78,16 @@ def clean_tweet(tweet):
     # Remove URLs
     tweet = re.sub(r'https?:\/\/\S+', '', tweet)
     tweet = re.sub(r'www.[\S]+', '', tweet)
-    
+
     # Remove usernames
     tweet = re.sub(r'@[\S_]+', '', tweet)
-    
+
     # Remove '#' symbol in hashtags
     tweet = re.sub('#', '', tweet)
-    
+
     # Remove extraneous whitespace
     tweet = re.sub('[\t\n\r\f\v]', '', tweet)
-    
+
     return tweet
 
 
@@ -93,7 +95,8 @@ def sentiment_analysis(tweet):
     ''' Sentiment analysis on input '''
     document = language.Document(
         content=tweet,
-        type='PLAIN_TEXT')
+        type_=language.Document.Type.PLAIN_TEXT,
+    )
 
     response = CLIENT.analyze_sentiment(
         document=document,
@@ -128,7 +131,7 @@ def evaluate(score, mag):
 
 def mkr(interp):
     ''' Assign marker based on interpretation '''
-    if interp == '+':
+    if interp == '+' or interp == '++':
         return 'b'
     if interp == ' ':
         return 'k'
@@ -143,7 +146,7 @@ def tweet_polarity(tweet_data):
     plt.xlabel('Sentiment Score')
     plt.xlim(-1, 1)
     plt.show()
-    plt.savefig('tweet_data.png')
+    # plt.savefig('tweet_data.png')
 
 
 def covid_plot(tweet_data, covid_data):
@@ -186,15 +189,15 @@ def visualize(tweet_data, covid_data):
 
 def main():
     ''' COVID-19 Tweet Analysis '''
-    
+
     # Constants
     DATE = '2020-01'
-    
+
     # Define directories
     root_dir = '/projectnb/caad/meganmp/data/usa-tweets'
     analysis_dir = '/projectnb/caad/meganmp/analysis/results/sentiment_analysis/'
     save_dir = make_datetime_dir(analysis_dir)
-    
+
     # Create log
     logging.basicConfig(
         filename=os.path.join(save_dir, 'sentiment_analysis.log'),
@@ -212,7 +215,7 @@ def main():
     covid_data['Date'] = pd.to_datetime(
         covid_data.Date, format='%Y-%m-%dT%H:%M:%SZ')
     logging.info('[Ground Truth COVID-19 Data] Processing Complete')
-    
+
     # Process Twitter Data
     logging.info('[Twitter Data] Processing')
     # Create Twitter Dataframe
@@ -220,7 +223,7 @@ def main():
 
     # Initialize variables
     monthly_totals = dict()
-    
+
     # Day Number as a two-digit string
     #day_numbers = int(os.environ["SGE_TASK_ID"])
     #DN = "%02d" % DN
@@ -248,44 +251,47 @@ def main():
                             if line:
                                 # Load, serialize, and preprocess line
                                 tweet_obj = serialize(line)
-                                
+
                                 # Preprocess json_obj
                                 tweet = preprocess_tweet(tweet_obj)
-                                #if any(keyword in tweet for keyword in (
-                                        #'COVID', 'covid', 'China virus', 'coronavirus')):
-                        
+                                # if any(keyword in tweet for keyword in (
+                                # 'COVID', 'covid', 'China virus', 'coronavirus')):
+
                                 # To obtain hashtag list:
                                 # hashtags =  tweet_obj['entities']['hashtags'][0]['text']
-                                
+
                                 # Sentiment analysis
                                 sentiment = sentiment_analysis(tweet)
-                    
+
                                 # Date Time format
-                                date_time_str = str(status.created_at)
-                                date_time = datetime.datetime.strptime(
-                                    date_time_str, '%Y-%m-%d %H:%M:%S')
-                    
+                                date_time_str = str(tweet_obj['created_at'])
+                                date_time = datetime.strftime(
+                                    datetime.strptime(
+                                        date_time_str,
+                                        '%a %b %d %H:%M:%S +0000 %Y'),
+                                    '%Y-%m-%d %H:%M:%S')
+
                                 # Store values
                                 pd_df = pd.DataFrame({'Date': [date_time],
                                                       'ID': handle,
                                                       'Tweet': tweet,
                                                       'Sentiment_Score': [sentiment.score],
                                                       'Sentiment_Mag': [sentiment.magnitude]})
-                                tweet_data = tweet_data.append(pd_df, ignore_index=True)
-                    
+                                tweet_data = tweet_data.append(
+                                    pd_df, ignore_index=True)
+
                         tweet_data['Date'] = pd.to_datetime(
                             tweet_data['Date'], format='%Y-%m-%d %H:%M:%S')
-                        tweet_data['Interpretation'] = tweet_data.apply(lambda row: evaluate(
-                            row['Sentiment_Score']), axis=1)
+                        tweet_data['Interpretation'] = tweet_data.apply(
+                            lambda row: evaluate(row['Sentiment_Score']), axis=1)
                         tweet_data['Marker Color'] = tweet_data.apply(
                             lambda row: mkr(row['Interpretation']), axis=1)
-                            
-                                                   
-    logging.info('[Twitter Data] Processing Complete')                          
+
+    logging.info('[Twitter Data] Processing Complete')
     loop_end = datetime.now()
     loop_time = loop_end - loop_start
     logging.info('Loop Completion Time = %s', loop_time)
-    
+
     visualize(tweet_data, covid_data)
 
 
