@@ -63,6 +63,7 @@ def main():
     with open('/projectnb/caad/meganmp/analysis/monthly_totals-english.json', 'w', encoding='utf-8') as f:
         json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
     
+    # Generate location totals
     logging.info('Initializing Counter')
     c = Counter(x['user']['location'] for x in tweets)
     logging.info('Counter Complete')
