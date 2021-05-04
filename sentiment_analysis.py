@@ -87,6 +87,8 @@ def clean_tweet(tweet):
 
     # Remove extraneous whitespace
     tweet = re.sub('[\t\n\r\f\v]', '', tweet)
+    
+    # Remove emoji
 
     return tweet
 
