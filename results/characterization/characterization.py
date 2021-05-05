@@ -33,6 +33,7 @@ def main():
     logging.info('Start Characterization Log of Original Dataset')
     
     # Initialize variables
+    logging.info('Initialize dictionaries')
     monthly_totals = dict()
     location_totals = dict()
     language_totals = dict()    
@@ -42,29 +43,37 @@ def main():
         dirs.sort()
         files.sort()
         for date_dir in sorted(dirs):
+            logging.info('Processing %s', date_dir)
             tweet_num = 0
             for file in sorted(os.listdir(os.path.join(root_dir, date_dir))):
                 file_extension = os.path.splitext(file)[1]
                 if file_extension == '.gz':
+                    logging.info('Processing %s', file)
                     with gzip.open(os.path.join(sub_dir, date_dir, file), 'r') as gzip_file:
                         for line in gzip_file:
                             line = line.rstrip()
                             if line:
                                 tweet_content = json.loads(line)
+                                tweet_num += 1
                                 
                                 # Location Frequency
+                                if tweet_content['geo'] == None or type(tweet_content['geo']) != str:
+                                    tweet_content['geo'] = 'none'
                                 if tweet_content['geo'] in location_totals:
                                     location_totals[tweet_content['geo']] += 1
                                 else:
                                     location_totals[tweet_content['geo']] = 1
         
                                 # Language Frequency
+                                if tweet_content['lang'] == None:
+                                    tweet_content['lang'] = 'none'
                                 if tweet_content['lang'] in language_totals:
                                     language_totals[tweet_content['lang']] += 1
                                 else:
                                     language_totals[tweet_content['lang']] = 1
 
-            monthly_totals[date_dir] = tweet_num           
+            monthly_totals[date_dir] = tweet_num
+            logging.info('Monthly Total: %s\t%d', date_dir, tweet_num)
                 
     logging.info('TRAVERSING DATA COMPLETE')
     
@@ -93,7 +102,7 @@ def main():
     with open(os.path.join(save_dir, 'location_totals-master.json'), 'w') as f4:
         json.dump(location_totals, f4)
         
-    logging.info('Preprocessing Complete')
+    logging.info('Processing Complete')
 
 
 if __name__ == "__main__":

@@ -1,0 +1,3 @@
+Monthly totals and language totals properly recorded.
+Location totals must be taken from self-reported data or
+converted from coordinates.
