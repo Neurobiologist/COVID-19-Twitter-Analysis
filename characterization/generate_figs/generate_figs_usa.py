@@ -61,8 +61,9 @@ def main():
                                                    ylabel='Total Tweets')
     
     plt.ticklabel_format(style='plain', axis='y')
+    xticks = list(tweet_totals['Total Tweets'])
     #barplot.set(xlim = (0, 6000000))
-    xlabels = ['%d'.format(x) for x in barplot.get_xticks()/1000000]
+    xlabels = ['%d'.format(x) for x in xticks/1000000]
     barplot.set_xticklabels(xlabels)
     
     
