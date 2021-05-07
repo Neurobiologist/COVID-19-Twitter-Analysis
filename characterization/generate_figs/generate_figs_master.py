@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-COVID-19 Final Dataset: Figure Generation
+COVID-19 Original Dataset: Figure Generation
 Megan M. Parsons | meganmp@bu.edu
 """
 
@@ -18,9 +18,9 @@ import seaborn as sns
 import unidecode
 from collections import OrderedDict
 
-# Define directories
-root_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/'
-save_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/' 
+# Define directories    #########################UPDATE THESE UPDATE UPDATE UPDATE
+#root_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/'
+#save_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/' 
 
 def open_json(file):
     with open(os.path.join(root_dir, file), 'r') as f:
