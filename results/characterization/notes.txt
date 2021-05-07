@@ -1,3 +1,6 @@
 Monthly totals and language totals properly recorded.
 Location totals must be taken from self-reported data or
 converted from coordinates.
+
+05.05.2021 2am update: Location totals recalculated from
+self-reported data (using standardization pipeline)

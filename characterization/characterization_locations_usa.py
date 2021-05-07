@@ -94,6 +94,11 @@ def main():
                             continue
                 
     logging.info('TRAVERSING DATA COMPLETE')
+
+    # Save location totals dictionary
+    logging.info('Saving location totals')
+    with open(os.path.join(save_dir, 'location_totals-usa.json'), 'w') as f4:
+        json.dump(location_totals, f4)
     
     # Rank top 100 locations
     logging.info('Ranking top 100 locations')
@@ -104,11 +109,6 @@ def main():
     with open(os.path.join(save_dir, 'top100locations-usa.csv'), 'w') as f3:
         write = csv.writer(f3)
         write.writerow(top100locs)
-
-    # Save location totals dictionary
-    logging.info('Saving location totals')
-    with open(os.path.join(save_dir, 'location_totals-usa.json'), 'w') as f4:
-        json.dump(location_totals, f4)
         
     logging.info('Processing Complete')
 

@@ -89,8 +89,12 @@ def clean_tweet(tweet):
     tweet = re.sub('[\t\n\r\f\v]', '', tweet)
     
     # Remove emoji
+    tweet = remove_emoji(tweet)
 
     return tweet
+
+def remove_emoji(tweet):
+    return emoji.get_emoji_regexp().sub(r'', tweet)
 
 
 def sentiment_analysis(tweet):

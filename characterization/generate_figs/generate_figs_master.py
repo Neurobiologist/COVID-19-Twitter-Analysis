@@ -7,8 +7,7 @@ Megan M. Parsons | meganmp@bu.edu
 # Imports
 import csv
 import emoji
-import folium
-from geopy.geocoders import Nominatim
+from fuzzywuzzy import fuzz
 import gzip
 import json
 import logging
@@ -17,7 +16,6 @@ import os
 import pandas as pd
 import seaborn as sns
 import unidecode
-from fuzzywuzzy import fuzz
 from collections import OrderedDict
 
 # Define directories
@@ -27,20 +25,9 @@ save_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets
 def open_json(file):
     with open(os.path.join(root_dir, file), 'r') as f:
         data = json.load(f)
+    
     return data
 
-def open_locs_csv(file):
-    ''' Convert top 100 locations csv to Python dictionary'''
-    # Intialize Variables
-    loc_dict = dict()
-    # Conversion from csv to dict
-    with open(os.path.join(root_dir, file), 'r') as f:
-        data = csv.reader(f, delimiter=',')
-        for row in data:
-            for i in range(len(row)):
-                tup = eval(row[i])
-                loc_dict.setdefault(tup[0], []).append(tup[1])
-    return loc_dict
 
 def main():
     
@@ -55,19 +42,16 @@ def main():
     sns.set_style('white')
     sns.set_context('paper')
     
-    # Initialize variables
-    location_map_dict = dict()
-
-    
     # Load data
     logging.info('Loading data')
     tweet_totals = open_json('monthly_totals-usa.json')
     locations = open_json('location_totals-usa.json')
-    top100locations = open_locs_csv('top100locations-usa.csv')
     
-
-            
-    #top100locs = pd.read_csv(os.path.join(root_dir, 'top100locations-usa.csv'))
+    with open(os.path.join(root_dir, 'top100locations-usa.csv'), 'r') as f:
+        data = csv.reader(f, delimiter=',')
+        for row in data:
+            print(row)
+    top100locs = pd.read_csv(os.path.join(root_dir, 'top100locations-usa.csv'))
     
     # Format data
     logging.info('Formatting Tweet Totals')
@@ -87,34 +71,10 @@ def main():
     yticks = barplot.get_yticks()/1000
     yticks = [int(x) for x in yticks]
     barplot.set_yticklabels(yticks)
-    barplot.figure.savefig('usa_tweet_volume.jpg')
-    barplot.figure.savefig('usa_tweet_volume.png')
+    plt.show()
     
     # Plot top 100 locations on map
-    # Generate Map
-    # usa_tweets_map = folium.Map(location=[39, -100], zoom_start=4)
-    # labeled_map = folium.Map(location=[39, -100], zoom_start=4)
-    
-    # Plot location markers on map
-    # geolocator = Nominatim(user_agent='Class_Project')
-    # for key in top100locations.keys():
-    #     try:
-    #         user_location = geolocator.geocode(key, country_codes='us')
-    #     except:
-    #         continue
-    #     if user_location:
-    #         folium.Marker([user_location.latitude, user_location.longitude], popup=user_location.address).add_to(usa_tweets_map)
-    #         folium.Marker([user_location.latitude, user_location.longitude], popup=key).add_to(labeled_map)
-    #         location_map_dict[key] = [[user_location.latitude, user_location.longitude], user_location.address]
-            
-            
-    # usa_tweets_map.save('usa_tweets_map.html')
-    # labeled_map.save('labeled_map.html')
-    # json.dump(location_map_dict, open( "location_map_dict.json", 'w' ) )
-                
-        
-        
-        
+    print(top100locs)
     
     ###########################################################################
     # Can we associate similar locations based on Levenshtein distance?
