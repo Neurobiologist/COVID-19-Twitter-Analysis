@@ -67,7 +67,6 @@ def main():
     
     # Traverse the data
     with gzip.open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'r') as gzip_file:
-        try:
             for line in gzip_file:
                 line = line.rstrip()
                 if line:
@@ -78,14 +77,15 @@ def main():
                         if 'hydroxychloroquine' in tweet_obj['entities']['hashtags'][0]['text']:
                             
                             # Process Location Data
-                            location = tweet_content['user']['location']
+                            location = tweet_obj['user']['location']
                             location = preprocess_location(location)
                             
                     except:
                         continue
-        except:
-            continue
                                     
+    with open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'rb') as f:
+        gzip_f = gzip.GzipFile(fileobj=f)
+        data = pd.read_json(gzip_f, lines=True)
 
                 
     logging.info('TRAVERSING DATA COMPLETE')
