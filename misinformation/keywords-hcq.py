@@ -55,6 +55,9 @@ def preprocess_location(loc):
     # Remove extraneous whitespace
     loc = loc.strip()
     return loc
+
+def list_hashtags(tweet_df):
+    return [hashtag['text'] for hashtag in tweet_df['entities']['hashtags']]
             
 
 def main():
@@ -69,31 +72,31 @@ def main():
     # Initialize variables
     logging.info('Initialize dictionary')
     location_totals = dict()  
-    
-    # # Traverse the data
-    # with gzip.open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'r') as gzip_file:
-    #         for line in gzip_file:
-    #             line = line.rstrip()
-    #             if line:
-    #                 tweet_obj = json.loads(line)
-                                        
-    #                 # Format into Pandas dataframe
-    #                 try:
-    #                     if 'hydroxychloroquine' in tweet_obj['entities']['hashtags'][0]['text']:
-                            
-    #                         # Process Location Data
-    #                         location = tweet_obj['user']['location']
-    #                         location = preprocess_location(location)
-                            
-    #                 except:
-    #                     continue
-                                    
+                                      
     with open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'rb') as f:
         gzip_f = gzip.GzipFile(fileobj=f)
-        data = pd.read_json(gzip_f, lines=True)
+        orig_df = pd.read_json(gzip_f, lines=True)
         
-
-
+    # Drop extraneous information    
+    orig_df = orig_df.drop('id_str', 1)
+    orig_df = orig_df.drop('contributors', 1)
+    orig_df = orig_df.drop('possibly_sensitive', 1)
+    orig_df = orig_df.drop('lang', 1)
+    orig_df = orig_df.drop('display_text_range', 1)
+    orig_df = orig_df.drop('source', 1)
+    orig_df = orig_df.drop('quoted_status_permalink',1)
+    
+    # Restructure dataframe
+    tweet_df = pd.DataFrame(columns = ['created_at', 'id', 'tweet_text', 'hashtags'])
+    
+    # Direct transfer of information
+    transfer_cols = ['created_at', 'id']
+    tweet_df[transfer_cols] = orig_df[transfer_cols]
+    #tweet_df['tweet_text'] = 
+    
+    # Constant KeyErrors; loop instead
+    
+    tweet_df['hashtags'] = orig_df['entities'].apply(lambda x: [y['text'] for y in x['hashtags']])
                 
     logging.info('TRAVERSING DATA COMPLETE')
     

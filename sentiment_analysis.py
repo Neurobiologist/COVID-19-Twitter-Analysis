@@ -4,6 +4,7 @@ import gzip
 import json
 import logging
 import matplotlib.pyplot as plt
+import nltk
 import numpy as np
 import os
 import pandas as pd
@@ -90,6 +91,11 @@ def clean_tweet(tweet):
     
     # Remove emoji
     tweet = remove_emoji(tweet)
+    
+    # Tokenize tweet
+    
+    
+    # Remove stopwords
 
     return tweet
 
