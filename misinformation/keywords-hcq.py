@@ -24,6 +24,11 @@ from collections import OrderedDict
 root_dir = '/projectnb/caad/meganmp/data/misinformation/' 
 save_dir = '/projectnb/caad/meganmp/analysis/results/misinformation/keywords'
 
+# Pandas Settings
+pd.set_option('max_colwidth', 280)  # Capture full tweet
+pd.set_option("display.max_rows", None, "display.max_columns", None)
+# Handle date time conversions between pandas and matplotlib
+
 def rank_locations(loc_dict):
     ''' Return top 100 locations from location dictionary'''
     loc_dict = OrderedDict(sorted(loc_dict.items(), key=lambda x: x[1], reverse=True))
@@ -65,27 +70,29 @@ def main():
     logging.info('Initialize dictionary')
     location_totals = dict()  
     
-    # Traverse the data
-    with gzip.open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'r') as gzip_file:
-            for line in gzip_file:
-                line = line.rstrip()
-                if line:
-                    tweet_obj = json.loads(line)
+    # # Traverse the data
+    # with gzip.open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'r') as gzip_file:
+    #         for line in gzip_file:
+    #             line = line.rstrip()
+    #             if line:
+    #                 tweet_obj = json.loads(line)
                                         
-                    # Format into Pandas dataframe
-                    try:
-                        if 'hydroxychloroquine' in tweet_obj['entities']['hashtags'][0]['text']:
+    #                 # Format into Pandas dataframe
+    #                 try:
+    #                     if 'hydroxychloroquine' in tweet_obj['entities']['hashtags'][0]['text']:
                             
-                            # Process Location Data
-                            location = tweet_obj['user']['location']
-                            location = preprocess_location(location)
+    #                         # Process Location Data
+    #                         location = tweet_obj['user']['location']
+    #                         location = preprocess_location(location)
                             
-                    except:
-                        continue
+    #                 except:
+    #                     continue
                                     
     with open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'rb') as f:
         gzip_f = gzip.GzipFile(fileobj=f)
         data = pd.read_json(gzip_f, lines=True)
+        
+
 
                 
     logging.info('TRAVERSING DATA COMPLETE')
