@@ -120,6 +120,10 @@ def main():
     token_sort_ratio = fuzz.token_sort_ratio(str1, str2)
     print(token_sort_ratio)
     
+    for key, value in map_dict.items():
+        for key2, value2 in map_dict.items():
+            print('{}, {}: {}'.format(key, key2, fuzz.token_sort_ratio(key, key2)))
+    
     
     # What if we associate the same identified locations in the top 100 locations
     # in the USA with the keys; does this mean that those keys in the flipped
@@ -133,6 +137,8 @@ def main():
             consolidated_locs[value[1]].append(key)
     
     print(consolidated_locs)
+    consolidated_locs_length = len(consolidated_locs)
+    # CONCLUSION: Our top 100 list is actually a top 72 list.
     
     
     
