@@ -64,10 +64,7 @@ def main():
     tweet_totals = open_json('monthly_totals-usa.json')
     locations = open_json('location_totals-usa.json')
     top100locations = open_locs_csv('top100locations-usa.csv')
-    
-
-            
-    #top100locs = pd.read_csv(os.path.join(root_dir, 'top100locations-usa.csv'))
+    map_dict = json.load( open( "location_map_dict.json" ) ) # Equivalent to location_map_dict below
     
     # Format data
     logging.info('Formatting Tweet Totals')
@@ -76,19 +73,19 @@ def main():
     
     ################# PLOTS ##################################################
     # Plot of tweet totals per month
-    barplot = sns.barplot(x='Month',
-                          y='Total Tweets',
-                          data = tweet_totals)
-    barplot.set(title = 'COVID-19 Tweets from Jan-Jun 2020',
-                                                   xlabel='Month',
-                                                   ylabel='Total Tweets (Thousands)')
+    # barplot = sns.barplot(x='Month',
+    #                       y='Total Tweets',
+    #                       data = tweet_totals)
+    # barplot.set(title = 'COVID-19 Tweets from Jan-Jun 2020',
+    #                                                xlabel='Month',
+    #                                                ylabel='Total Tweets (Thousands)')
     
-    plt.ticklabel_format(style='plain', axis='y')
-    yticks = barplot.get_yticks()/1000
-    yticks = [int(x) for x in yticks]
-    barplot.set_yticklabels(yticks)
-    barplot.figure.savefig('usa_tweet_volume.jpg')
-    barplot.figure.savefig('usa_tweet_volume.png')
+    # plt.ticklabel_format(style='plain', axis='y')
+    # yticks = barplot.get_yticks()/1000
+    # yticks = [int(x) for x in yticks]
+    # barplot.set_yticklabels(yticks)
+    # barplot.figure.savefig('usa_tweet_volume.jpg')
+    # barplot.figure.savefig('usa_tweet_volume.png')
     
     # Plot top 100 locations on map
     # Generate Map
@@ -122,6 +119,20 @@ def main():
     str2 = 'USA'
     token_sort_ratio = fuzz.token_sort_ratio(str1, str2)
     print(token_sort_ratio)
+    
+    
+    # What if we associate the same identified locations in the top 100 locations
+    # in the USA with the keys; does this mean that those keys in the flipped
+    # dictionary are equivalent?
+    consolidated_locs = dict()
+    
+    for key, value in map_dict.items():
+        if value[1] not in consolidated_locs:
+            consolidated_locs[value[1]] = [key]
+        else:
+            consolidated_locs[value[1]].append(key)
+    
+    print(consolidated_locs)
     
     
     
