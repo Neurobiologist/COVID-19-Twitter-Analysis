@@ -16,10 +16,15 @@ import gzip
 import json
 import logging
 import math
+import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
 import os
 import pandas as pd
+import seaborn as sns
 import unidecode
 from collections import OrderedDict
+from mpl_toolkits.mplot3d import Axes3D
 
 # Define directories
 root_dir = '/projectnb/caad/meganmp/data/misinformation/' 
@@ -28,12 +33,16 @@ save_dir = '/projectnb/caad/meganmp/analysis/results/misinformation/keywords'
 # Pandas Settings
 pd.set_option('max_colwidth', 280)  # Capture full tweet
 pd.set_option("display.max_rows", None, "display.max_columns", None)
-# Handle date time conversions between pandas and matplotlib
 
-def rank_locations(loc_dict):
+# Seaborn Settings
+palette = sns.husl_palette(9, s=0.7)
+
+
+
+def rank_entities(entity):
     ''' Return top 100 locations from location dictionary'''
-    loc_dict = OrderedDict(sorted(loc_dict.items(), key=lambda x: x[1], reverse=True))
-    first_n_values = list(loc_dict.items())[:100]
+    entity = OrderedDict(sorted(entity.items(), key=lambda x: x[1], reverse=True))
+    first_n_values = list(entity.items())[:100]
     return first_n_values
 
 
@@ -68,12 +77,6 @@ def preprocess_retweet(rt):
 def preprocess_ext_tweet(ext_tweet):
     tweet = ext_tweet['full_text']
     return tweet
-
-
-
-    # Clean Tweet
-    #tweet = clean_tweet(tweet)
-
 
 def is_retweet(x):
     try:
@@ -163,17 +166,53 @@ def main():
         else:
             tweet_df.loc[index, 'is_profile_loc'] = True
             tweet_df.loc[index, 'profile_loc'] = orig_df.loc[index, 'user']['location']
-        
                 
-        
+    logging.info('ORGANIZING DATA COMPLETE')
     
-                
-                
-    logging.info('TRAVERSING DATA COMPLETE')
+    ##########################################################################
+    # Keyword Frequency Plot
+    hcq_keywords = pd.Series(sum([item for item in tweet_df.hashtags], [])).value_counts()
+    hashtag_df = hcq_keywords.to_frame()
+    hashtag_df = hashtag_df.reset_index()
+    hashtag_df.columns = ['hashtag','frequency']
+    
+    plt.figure(figsize=(15,10))
+    sns.set(font_scale = 2)
+    #plt.xticks(rotation=45)
+    keyword_freq_plot = sns.barplot(data=hashtag_df[1:10], x = 'hashtag',
+                                    y= 'frequency').set(title='Most Frequently Used Hashtags in Hydroxychloroquine Dataset',
+                                                        xlabel='Hashtag',
+                                                        ylabel='Count')
+                                                        
+    #plt.savefig('HCQ_hashtag_frequency.png')
+    #plt.savefig('HCQ_hashtag_frequency.jpg')
+   
+    
+    # Hashtag Count Relative to Geotagging
+    hashable_df = tweet_df.explode('hashtags')
+    hashtag_count = sns.countplot(data=hashable_df,
+                                  y = 'hashtags',
+                                  hue = 'is_retweet',
+                                  order=pd.value_counts(hashable_df['hashtags']).iloc[:10].index)
+   
+    plt.xticks(
+        rotation=45,
+        horizontalalignment='right',
+        fontweight='light',
+        fontsize='x-large')
+    plt.savefig('HCQ_hashtag_count_cf_geotagging.jpg')
+
+   
+    
+   
+    
+   
+    
+   
     
     # Rank top 100 locations
     logging.info('Ranking top 100 locations')
-    top100locs = rank_locations(location_totals)
+    top100locs = rank_entites(location_totals)
         
     # Save top 100 locations in csv
     logging.info('Saving top 100 locations csv')
