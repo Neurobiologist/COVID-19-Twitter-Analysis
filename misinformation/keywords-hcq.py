@@ -170,37 +170,40 @@ def main():
     logging.info('ORGANIZING DATA COMPLETE')
     
     ##########################################################################
+    # Hashtag Count Relative to Retweet Status
+    # plt.figure(figsize=(24,16))
+    # sns.set(font_scale=2)
+    # hashable_df = tweet_df.explode('hashtags')
+    # hashable_df = hashable_df[hashable_df['hashtags'] != 'hydroxychloroquine']
+    # hashtag_count = sns.countplot(data=hashable_df,
+    #                               y = 'hashtags',
+    #                               hue = 'is_retweet',
+    #                               order=pd.value_counts(hashable_df['hashtags']).iloc[1:10].index).set(title='Most Common Hashtags on Hydroxychloroquine Tweets')
+    # plt.savefig('HCQ_hashtag_count_cf_RT_status.jpg')
+    
+    
     # Keyword Frequency Plot
-    hcq_keywords = pd.Series(sum([item for item in tweet_df.hashtags], [])).value_counts()
-    hashtag_df = hcq_keywords.to_frame()
-    hashtag_df = hashtag_df.reset_index()
-    hashtag_df.columns = ['hashtag','frequency']
+    # hcq_keywords = pd.Series(sum([item for item in tweet_df.hashtags], [])).value_counts()
+    # hashtag_df = hcq_keywords.to_frame()
+    # hashtag_df = hashtag_df.reset_index()
+    # hashtag_df.columns = ['hashtag','frequency']
+    # plt.figure(figsize=(30,25))
+    # sns.set(font_scale = 3.5)
+    # plt.xticks(rotation=30)
+    # keyword_freq_plot = sns.barplot(data=hashtag_df[1:10], x = 'hashtag',
+    #                                 y= 'frequency').set(title='Most Frequently Used Hashtags in Hydroxychloroquine Dataset',
+    #                                                     xlabel='Hashtag',
+    #                                                     ylabel='Count')
+    # plt.savefig('HCQ_hashtag_frequency.png')
+    # plt.savefig('HCQ_hashtag_frequency.jpg')
     
-    plt.figure(figsize=(15,10))
-    sns.set(font_scale = 2)
-    #plt.xticks(rotation=45)
-    keyword_freq_plot = sns.barplot(data=hashtag_df[1:10], x = 'hashtag',
-                                    y= 'frequency').set(title='Most Frequently Used Hashtags in Hydroxychloroquine Dataset',
-                                                        xlabel='Hashtag',
-                                                        ylabel='Count')
-                                                        
-    #plt.savefig('HCQ_hashtag_frequency.png')
-    #plt.savefig('HCQ_hashtag_frequency.jpg')
+    # Plot coordinates of Tweet origin
+    # There are none reported.
+    
+    
    
     
-    # Hashtag Count Relative to Geotagging
-    hashable_df = tweet_df.explode('hashtags')
-    hashtag_count = sns.countplot(data=hashable_df,
-                                  y = 'hashtags',
-                                  hue = 'is_retweet',
-                                  order=pd.value_counts(hashable_df['hashtags']).iloc[:10].index)
-   
-    plt.xticks(
-        rotation=45,
-        horizontalalignment='right',
-        fontweight='light',
-        fontsize='x-large')
-    plt.savefig('HCQ_hashtag_count_cf_geotagging.jpg')
+
 
    
     
