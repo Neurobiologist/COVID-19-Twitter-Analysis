@@ -18,6 +18,7 @@ import logging
 import math
 import matplotlib.pyplot as plt
 import matplotlib
+import networkx as nx
 import numpy as np
 import os
 import pandas as pd
@@ -25,6 +26,7 @@ import seaborn as sns
 import unidecode
 from collections import OrderedDict
 from mpl_toolkits.mplot3d import Axes3D
+from scipy import stats
 
 # Define directories
 root_dir = '/projectnb/caad/meganmp/data/misinformation/' 
@@ -84,6 +86,30 @@ def is_retweet(x):
             return False
     except:
         return True
+    
+def get_interactions(row):
+    '''Build Interactions for Network'''
+     
+    # Define interactions
+    interactions = set()
+    
+    # Replies
+    interactions.add((str(row["in_reply_to_user_id"]), str(row["in_reply_to_screen_name"])))
+    # Retweets
+    interactions.add((str(row["retweeted_id"]), str(row["retweeted_screen_name"])))
+    # User Mentions
+    interactions.add((str(row["user_mention_id"]), str(row["user_mention_screen_name"])))
+    
+    # Discard user
+    interactions.discard(row["user_id"])
+    
+    # Discard all None/NaN interactions
+    interactions.discard(('None', 'None'))
+    interactions.discard(('None', 'nan'))
+    interactions.discard(('nan', 'None'))
+    interactions.discard(('nan', 'nan'))
+
+    return [row['user_id'], row['user_name']], interactions
             
 
 def main():
@@ -114,15 +140,23 @@ def main():
     orig_df = orig_df.drop('quoted_status_permalink',1)
     
     # Restructure dataframe
-    tweet_df = pd.DataFrame(columns = ['created_at', 'id', 'tweet_text', 'hashtags',
-                                       'user_followers_count', 'is_retweet',
+    tweet_df = pd.DataFrame(columns = ['created_at', 'id', 'user_id',
+                                       'tweet_text', 'hashtags', 
+                                       'user_followers_count',
+                                       'is_reply',
                                        'in_reply_to_status_id',
                                        'in_reply_to_user_id',
                                        'in_reply_to_screen_name',
-                                       'is_reply',
+                                       'is_retweet',
+                                       'retweeted_id',
+                                       'retweeted_screen_name',
+                                       'has_mentions',
+                                       'user_mention_id',
+                                       'user_mention_screen_name',
                                        'is_geo',
                                        'geo_coordinates',
-                                       'is_profile_loc'
+                                       'is_profile_loc',
+                                       'profile_loc'
                                        ])
     
     # Direct transfer of information
@@ -138,9 +172,27 @@ def main():
     
     for index, row in orig_df.iterrows():
         
+        # User ID
+        if orig_df.loc[index, 'user']['id_str'] == None:
+            tweet_df['user_id'] = None
+        else:
+            tweet_df['user_id'] = orig_df.loc[index, 'user']['id_str']
+            tweet_df['user_name'] = orig_df.loc[index, 'user']['screen_name']
+            tweet_df['user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
+        
+        # User Mentions
+        if not orig_df.loc[index, 'entities']['user_mentions']:
+            tweet_df['has_mentions'] = False
+        else:
+            tweet_df['has_mentions'] = True
+            tweet_df['user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
+            tweet_df['user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
+        
         # Capture full text of tweet
         if is_retweet(orig_df.loc[index, 'retweeted_status']):
             tweet_df.loc[index, 'tweet_text'] = preprocess_retweet(row['retweeted_status'])
+            tweet_df.loc[index, 'retweeted_id'] = orig_df.loc[index, 'retweeted_status']['user']['id_str']
+            tweet_df.loc[index, 'retweeted_screen_name'] = orig_df.loc[index, 'retweeted_status']['user']['screen_name']
         else:
             try:
                 tweet_df.loc[index, 'tweet_text'] = preprocess_ext_tweet(row['extended_tweet'])
@@ -168,6 +220,62 @@ def main():
             tweet_df.loc[index, 'profile_loc'] = orig_df.loc[index, 'user']['location']
                 
     logging.info('ORGANIZING DATA COMPLETE')
+    
+    # Build Network Graph
+    network = nx.Graph()
+    
+    for index, row in tweet_df.iterrows():
+        user, interactions = get_interactions(row)
+        user_id = user[0]
+        user_name = user[1]
+        tweet_id = row["id"]
+        for interaction in interactions:
+            int_id, int_name = interaction
+            network.add_edge(user_id, int_id, tweet_id=tweet_id)
+            network.nodes[user_id]["name"] = user_name
+            network.nodes[int_id]["name"] = int_name
+               
+    # Identify largest subnetwork
+    subnetwork = network.subgraph(max(nx.connected_components(network), key=len))
+    
+    # Calculate degrees of each node
+    degrees = [deg for (node, deg) in network.degree()]
+    sub_degrees = [deg for (node, deg) in subnetwork.degree()]
+            
+    with open('network_analysis.txt', 'w') as file_out:
+        file_out.write('Nodes = {}\n'.format(network.number_of_nodes()))
+        file_out.write('Edges = {}'.format(network.number_of_edges()))
+        file_out.write('Max Degree = {}'.format(np.max(degrees)))
+        file_out.write('Average degree = {}'.format(np.mean(degrees)))
+        file_out.write('Most frequent degree = {}'.format(stats.mode(degrees)[0][0]))
+        file_out.write('# Connected Components = {}'.format(nx.number_connected_components(network)))
+    
+        if nx.is_connected(network):
+            file_out.write('Network is connected.')
+        else:
+            file_out.write('Network not connected.')
+        
+        file_out.write('Largest Subgraph Analysis')
+        file_out.write('Nodes = {}'.format(subnetwork.number_of_nodes()))
+        file_out.write('Edges = {}'.format(subnetwork.number_of_edges()))
+        file_out.write('Max Degree = {}'.format(np.max(sub_degrees)))
+        file_out.write('Average degree = {}'.format(np.mean(sub_degrees)))
+        file_out.write('Most frequent degree = {}'.format(stats.mode(sub_degrees)[0][0]))
+        file_out.write('# Connected Components = {}'.format(nx.number_connected_components(subnetwork)))
+        
+    plt.figure(figsize=(50,50))
+    nx.draw(network)
+    plt.savefig('network.jpg')
+    
+    plt.figure(figsize=(50,50))
+    nx.draw(subnetwork)
+    plt.savefig('subnetwork.jpg')
+    
+
+    
+    
+    
+    
     
     ##########################################################################
     # Hashtag Count Relative to Retweet Status
@@ -200,6 +308,16 @@ def main():
     # Plot coordinates of Tweet origin
     # There are none reported.
     
+    # Tweet Hashtag Over Time
+    # Tweets per time bin (every 4 hours)
+    # sns.set(font_scale=2)
+    # HCQ_bin_df = tweet_df.groupby(pd.Grouper(key='created_at', freq='4H', convention='start')).size()
+    # plt.figure(figsize=(30,25))
+    # ex = sns.lineplot(data=HCQ_bin_df).set(ylabel='Tweet Count', xlabel='Date (4H Time Bin)',
+    #                                        title='#hydroxychloroquine Tweets per 4H Time Bin (May-June 2020)')
+    # plt.grid(True)
+    # plt.savefig('Hashtag_HCQ_Tweets_Over_Time.jpg')
+    
     
    
     
@@ -213,20 +331,20 @@ def main():
     
    
     
-    # Rank top 100 locations
-    logging.info('Ranking top 100 locations')
-    top100locs = rank_entites(location_totals)
+    # # Rank top 100 locations
+    # logging.info('Ranking top 100 locations')
+    # top100locs = rank_entites(location_totals)
         
-    # Save top 100 locations in csv
-    logging.info('Saving top 100 locations csv')
-    with open(os.path.join(save_dir, 'top100locations-hcq.csv'), 'w') as f3:
-        write = csv.writer(f3)
-        write.writerow(top100locs)
+    # # Save top 100 locations in csv
+    # logging.info('Saving top 100 locations csv')
+    # with open(os.path.join(save_dir, 'top100locations-hcq.csv'), 'w') as f3:
+    #     write = csv.writer(f3)
+    #     write.writerow(top100locs)
 
-    # Save location totals dictionary
-    logging.info('Saving location totals')
-    with open(os.path.join(save_dir, 'location_totals-hcq.json'), 'w') as f4:
-        json.dump(location_totals, f4)
+    # # Save location totals dictionary
+    # logging.info('Saving location totals')
+    # with open(os.path.join(save_dir, 'location_totals-hcq.json'), 'w') as f4:
+    #     json.dump(location_totals, f4)
         
     logging.info('Processing Complete')
 
