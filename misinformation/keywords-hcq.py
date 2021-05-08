@@ -4,10 +4,7 @@ COVID-19 Analysis | meganmp@bu.edu
 '''
 
 # -*- coding: utf-8 -*-
-"""
-COVID-19 Original Dataset Characterization of Self-Reported Locations
-Megan M. Parsons | meganmp@bu.edu
-"""
+
 
 # Imports
 import csv
@@ -22,6 +19,7 @@ import networkx as nx
 import numpy as np
 import os
 import pandas as pd
+import pickle as pkl
 import seaborn as sns
 import unidecode
 from collections import OrderedDict
@@ -174,19 +172,19 @@ def main():
         
         # User ID
         if orig_df.loc[index, 'user']['id_str'] == None:
-            tweet_df['user_id'] = None
+            tweet_df.loc[index, 'user_id'] = None
         else:
-            tweet_df['user_id'] = orig_df.loc[index, 'user']['id_str']
-            tweet_df['user_name'] = orig_df.loc[index, 'user']['screen_name']
-            tweet_df['user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
+            tweet_df.loc[index, 'user_id'] = orig_df.loc[index, 'user']['id_str']
+            tweet_df.loc[index, 'user_name'] = orig_df.loc[index, 'user']['screen_name']
+            tweet_df.loc[index, 'user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
         
         # User Mentions
         if not orig_df.loc[index, 'entities']['user_mentions']:
-            tweet_df['has_mentions'] = False
+            tweet_df.loc[index, 'has_mentions'] = False
         else:
-            tweet_df['has_mentions'] = True
-            tweet_df['user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
-            tweet_df['user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
+            tweet_df.loc[index, 'has_mentions'] = True
+            tweet_df.loc[index, 'user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
+            tweet_df.loc[index, 'user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
         
         # Capture full text of tweet
         if is_retweet(orig_df.loc[index, 'retweeted_status']):
@@ -220,6 +218,11 @@ def main():
             tweet_df.loc[index, 'profile_loc'] = orig_df.loc[index, 'user']['location']
                 
     logging.info('ORGANIZING DATA COMPLETE')
+    
+    # Save pkl file
+    tweet_df.to_pickle('hcq_tweets_df.pkl')
+    # Load pkl file
+    # tweet_df = pd.read_pickle('hcq_tweets_df.pkl')
     
     # Build Network Graph
     network = nx.Graph()
@@ -263,6 +266,9 @@ def main():
         file_out.write('Most frequent degree = {}'.format(stats.mode(sub_degrees)[0][0]))
         file_out.write('# Connected Components = {}'.format(nx.number_connected_components(subnetwork)))
         
+    degree_dict = dict(network.degree())
+    most_connected_user = max(dict(network.degree()).items(), key = lambda x: x[1])
+
     plt.figure(figsize=(50,50))
     nx.draw(network)
     plt.savefig('network.jpg')
@@ -270,6 +276,9 @@ def main():
     plt.figure(figsize=(50,50))
     nx.draw(subnetwork)
     plt.savefig('subnetwork.jpg')
+    
+    # Sentiment analysis of most_connected_user's tweets
+    
     
 
     

@@ -178,19 +178,19 @@ def main():
         
         # User ID
         if orig_df.loc[index, 'user']['id_str'] == None:
-            tweet_df['user_id'] = None
+            tweet_df.loc[index, 'user_id'] = None
         else:
-            tweet_df['user_id'] = orig_df.loc[index, 'user']['id_str']
-            tweet_df['user_name'] = orig_df.loc[index, 'user']['screen_name']
-            tweet_df['user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
+            tweet_df.loc[index, 'user_id'] = orig_df.loc[index, 'user']['id_str']
+            tweet_df.loc[index, 'user_name'] = orig_df.loc[index, 'user']['screen_name']
+            tweet_df.loc[index, 'user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
         
         # User Mentions
         if not orig_df.loc[index, 'entities']['user_mentions']:
-            tweet_df['has_mentions'] = False
+            tweet_df.loc[index, 'has_mentions'] = False
         else:
-            tweet_df['has_mentions'] = True
-            tweet_df['user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
-            tweet_df['user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
+            tweet_df.loc[index, 'has_mentions'] = True
+            tweet_df.loc[index, 'user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
+            tweet_df.loc[index, 'user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
         
         # Capture full text of tweet
         if is_retweet(orig_df.loc[index, 'retweeted_status']):
@@ -224,6 +224,11 @@ def main():
             tweet_df.loc[index, 'profile_loc'] = orig_df.loc[index, 'user']['location']
                 
     logging.info('ORGANIZING DATA COMPLETE')
+    
+    # Save pkl file
+    tweet_df.save_pickle('usa_tweets_df.pkl')
+    # Load pkl file
+    # tweet_df = pd.read_pickle('usa_tweets_df.pkl')
     
     # Build Network Graph
     network = nx.Graph()
