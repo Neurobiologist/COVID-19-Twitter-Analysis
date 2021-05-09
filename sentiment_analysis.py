@@ -12,6 +12,7 @@ import pandas as pd
 import re
 import sys
 from datetime import datetime
+from nltk.corpus import wordnet as wn
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from pandas.plotting import register_matplotlib_converters
@@ -31,7 +32,7 @@ register_matplotlib_converters()
 nltk.download('all')
 
 # Access the Google NLP API
-#CLIENT = language.LanguageServiceClient()
+CLIENT = language.LanguageServiceClient()
 # Access the COVID19Py API
 COVID = COVID19Py.COVID19(
     url='https://covid19-api.kamaropoulos.com')   # Mirror
@@ -99,11 +100,14 @@ def clean_tweet(tweet):
     tweet = remove_emoji(tweet)
     
     # Tokenize tweet
-    tweet = nltk.word_tokenize(tweet)  
+    tweet = nltk.word_tokenize(tweet)
     
     # Remove stopwords
     stopwords = set(nltk.corpus.stopwords.words("english"))
     tweet = remove_stopwords(tweet, stopwords)
+    
+    # Identify parts of speech
+    tweet = nltk.pos_tag(tweet)
 
     # Lemmatize
     lemmatizer = WordNetLemmatizer() 
@@ -123,10 +127,21 @@ def remove_stopwords(tweet, stopwords):
             
 
 def lemmatize_tweet(tweet, lemmatizer):
-    lemma_tweet = []
-    for word in tweet:
-        lemma_tweet.append(lemmatizer.lemmatize(word))
-    return " ".join(lemma_tweet)
+    lemma_tweet = [lemmatizer.lemmatize(word[0], pos=(get_wordnet_pos(word[1]))) for word in tweet]
+    return lemma_tweet
+
+def get_wordnet_pos(treebank_tag):
+    '''Conversion from https://bit.ly/3vQ49de'''
+    if treebank_tag.startswith('J'):
+        return wn.ADJ
+    elif treebank_tag.startswith('V'):
+        return wn.VERB
+    elif treebank_tag.startswith('N'):
+        return wn.NOUN
+    elif treebank_tag.startswith('R'):
+        return wn.ADV
+    else:
+        return wn.NOUN
 
 
 def sentiment_analysis(tweet):
