@@ -112,117 +112,117 @@ def get_interactions(row):
 
 def main():
     
-    # Create log
-    logging.basicConfig(
-        filename=os.path.join(save_dir, 'misinformation_hcq.log'),
-        level=logging.DEBUG,
-        format='%(levelname)s\t%(asctime)s\t%(message)s')
-    logging.info('Start Misinformation Log of USA Dataset HCQ Tweets')
+    # # Create log
+    # logging.basicConfig(
+    #     filename=os.path.join(save_dir, 'misinformation_hcq.log'),
+    #     level=logging.DEBUG,
+    #     format='%(levelname)s\t%(asctime)s\t%(message)s')
+    # logging.info('Start Misinformation Log of USA Dataset HCQ Tweets')
     
-    # Initialize variables
-    logging.info('Initialize dictionary')
-    location_totals = dict()  
+    # # Initialize variables
+    # logging.info('Initialize dictionary')
+    # location_totals = dict()  
     
-    # Read twitter objects into pandas dataframe                                  
-    with open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'rb') as f:
-        gzip_f = gzip.GzipFile(fileobj=f)
-        orig_df = pd.read_json(gzip_f, lines=True)
+    # # Read twitter objects into pandas dataframe                                  
+    # with open(os.path.join(root_dir, 'hcq-tweets.jsonl.gz'), 'rb') as f:
+    #     gzip_f = gzip.GzipFile(fileobj=f)
+    #     orig_df = pd.read_json(gzip_f, lines=True)
         
-    # Drop extraneous information    
-    orig_df = orig_df.drop('id_str', 1)
-    orig_df = orig_df.drop('contributors', 1)
-    orig_df = orig_df.drop('possibly_sensitive', 1)
-    orig_df = orig_df.drop('lang', 1)
-    orig_df = orig_df.drop('display_text_range', 1)
-    orig_df = orig_df.drop('source', 1)
-    orig_df = orig_df.drop('quoted_status_permalink',1)
+    # # Drop extraneous information    
+    # orig_df = orig_df.drop('id_str', 1)
+    # orig_df = orig_df.drop('contributors', 1)
+    # orig_df = orig_df.drop('possibly_sensitive', 1)
+    # orig_df = orig_df.drop('lang', 1)
+    # orig_df = orig_df.drop('display_text_range', 1)
+    # orig_df = orig_df.drop('source', 1)
+    # orig_df = orig_df.drop('quoted_status_permalink',1)
     
-    # Restructure dataframe
-    tweet_df = pd.DataFrame(columns = ['created_at', 'id', 'user_id',
-                                       'tweet_text', 'hashtags', 
-                                       'user_followers_count',
-                                       'is_reply',
-                                       'in_reply_to_status_id',
-                                       'in_reply_to_user_id',
-                                       'in_reply_to_screen_name',
-                                       'is_retweet',
-                                       'retweeted_id',
-                                       'retweeted_screen_name',
-                                       'has_mentions',
-                                       'user_mention_id',
-                                       'user_mention_screen_name',
-                                       'is_geo',
-                                       'geo_coordinates',
-                                       'is_profile_loc',
-                                       'profile_loc'
-                                       ])
+    # # Restructure dataframe
+    # tweet_df = pd.DataFrame(columns = ['created_at', 'id', 'user_id',
+    #                                    'tweet_text', 'hashtags', 
+    #                                    'user_followers_count',
+    #                                    'is_reply',
+    #                                    'in_reply_to_status_id',
+    #                                    'in_reply_to_user_id',
+    #                                    'in_reply_to_screen_name',
+    #                                    'is_retweet',
+    #                                    'retweeted_id',
+    #                                    'retweeted_screen_name',
+    #                                    'has_mentions',
+    #                                    'user_mention_id',
+    #                                    'user_mention_screen_name',
+    #                                    'is_geo',
+    #                                    'geo_coordinates',
+    #                                    'is_profile_loc',
+    #                                    'profile_loc'
+    #                                    ])
     
-    # Direct transfer of information
-    transfer_cols = ['created_at', 'id', 'in_reply_to_status_id', 'in_reply_to_user_id',
-                     'in_reply_to_screen_name']
-    tweet_df[transfer_cols] = orig_df[transfer_cols]
+    # # Direct transfer of information
+    # transfer_cols = ['created_at', 'id', 'in_reply_to_status_id', 'in_reply_to_user_id',
+    #                  'in_reply_to_screen_name']
+    # tweet_df[transfer_cols] = orig_df[transfer_cols]
     
-    # Format remaining information
-    tweet_df['hashtags'] = orig_df['entities'].apply(lambda x: [y['text'] for y in x['hashtags']])
-    tweet_df['is_reply'] = orig_df['in_reply_to_screen_name'].apply(lambda x: False if x == None else True)
-    tweet_df['is_retweet'] = orig_df['retweeted_status'].apply(lambda x: is_retweet(x))
+    # # Format remaining information
+    # tweet_df['hashtags'] = orig_df['entities'].apply(lambda x: [y['text'] for y in x['hashtags']])
+    # tweet_df['is_reply'] = orig_df['in_reply_to_screen_name'].apply(lambda x: False if x == None else True)
+    # tweet_df['is_retweet'] = orig_df['retweeted_status'].apply(lambda x: is_retweet(x))
     
     
-    for index, row in orig_df.iterrows():
+    # for index, row in orig_df.iterrows():
         
-        # User ID
-        if orig_df.loc[index, 'user']['id_str'] == None:
-            tweet_df.loc[index, 'user_id'] = None
-        else:
-            tweet_df.loc[index, 'user_id'] = orig_df.loc[index, 'user']['id_str']
-            tweet_df.loc[index, 'user_name'] = orig_df.loc[index, 'user']['screen_name']
-            tweet_df.loc[index, 'user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
+    #     # User ID
+    #     if orig_df.loc[index, 'user']['id_str'] == None:
+    #         tweet_df.loc[index, 'user_id'] = None
+    #     else:
+    #         tweet_df.loc[index, 'user_id'] = orig_df.loc[index, 'user']['id_str']
+    #         tweet_df.loc[index, 'user_name'] = orig_df.loc[index, 'user']['screen_name']
+    #         tweet_df.loc[index, 'user_followers_count'] = orig_df.loc[index, 'user']['followers_count']
         
-        # User Mentions
-        if not orig_df.loc[index, 'entities']['user_mentions']:
-            tweet_df.loc[index, 'has_mentions'] = False
-        else:
-            tweet_df.loc[index, 'has_mentions'] = True
-            tweet_df.loc[index, 'user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
-            tweet_df.loc[index, 'user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
+    #     # User Mentions
+    #     if not orig_df.loc[index, 'entities']['user_mentions']:
+    #         tweet_df.loc[index, 'has_mentions'] = False
+    #     else:
+    #         tweet_df.loc[index, 'has_mentions'] = True
+    #         tweet_df.loc[index, 'user_mention_id'] = orig_df.loc[index, 'entities']['user_mentions'][0]['id']
+    #         tweet_df.loc[index, 'user_mention_screen_name'] = orig_df.loc[index, 'entities']['user_mentions'][0]['screen_name']
         
-        # Capture full text of tweet
-        if is_retweet(orig_df.loc[index, 'retweeted_status']):
-            tweet_df.loc[index, 'tweet_text'] = preprocess_retweet(row['retweeted_status'])
-            tweet_df.loc[index, 'retweeted_id'] = orig_df.loc[index, 'retweeted_status']['user']['id_str']
-            tweet_df.loc[index, 'retweeted_screen_name'] = orig_df.loc[index, 'retweeted_status']['user']['screen_name']
-        else:
-            try:
-                tweet_df.loc[index, 'tweet_text'] = preprocess_ext_tweet(row['extended_tweet'])
-            except:
-                tweet_df.loc[index, 'tweet_text'] =  row['full_text']
+    #     # Capture full text of tweet
+    #     if is_retweet(orig_df.loc[index, 'retweeted_status']):
+    #         tweet_df.loc[index, 'tweet_text'] = preprocess_retweet(row['retweeted_status'])
+    #         tweet_df.loc[index, 'retweeted_id'] = orig_df.loc[index, 'retweeted_status']['user']['id_str']
+    #         tweet_df.loc[index, 'retweeted_screen_name'] = orig_df.loc[index, 'retweeted_status']['user']['screen_name']
+    #     else:
+    #         try:
+    #             tweet_df.loc[index, 'tweet_text'] = preprocess_ext_tweet(row['extended_tweet'])
+    #         except:
+    #             tweet_df.loc[index, 'tweet_text'] =  row['full_text']
                 
-        # Geotagging
-        if orig_df.loc[index, 'geo'] == None:
-            tweet_df.loc[index, 'is_geo'] = False
-            tweet_df.loc[index, 'geo_coordinates'] = None
-        else:
-            try:
-                tweet_df.loc[index, 'geo_coordinates'] = orig_df.loc[index, 'geo']['coordinates']
-                tweet_df.loc[index, 'is_geo'] = True
-            except:
-                tweet_df.loc[index, 'is_geo'] = False
-                tweet_df.loc[index, 'geo_coordinates'] = None
+    #     # Geotagging
+    #     if orig_df.loc[index, 'geo'] == None:
+    #         tweet_df.loc[index, 'is_geo'] = False
+    #         tweet_df.loc[index, 'geo_coordinates'] = None
+    #     else:
+    #         try:
+    #             tweet_df.loc[index, 'geo_coordinates'] = orig_df.loc[index, 'geo']['coordinates']
+    #             tweet_df.loc[index, 'is_geo'] = True
+    #         except:
+    #             tweet_df.loc[index, 'is_geo'] = False
+    #             tweet_df.loc[index, 'geo_coordinates'] = None
                 
-        # User Location
-        if orig_df.loc[index, 'user']['location'] == None or type(orig_df.loc[index, 'user']['location']) != str:
-            tweet_df.loc[index, 'is_profile_loc'] = False
-            tweet_df.loc[index, 'profile_loc'] = None
-        else:
-            tweet_df.loc[index, 'is_profile_loc'] = True
-            tweet_df.loc[index, 'profile_loc'] = orig_df.loc[index, 'user']['location']
+    #     # User Location
+    #     if orig_df.loc[index, 'user']['location'] == None or type(orig_df.loc[index, 'user']['location']) != str:
+    #         tweet_df.loc[index, 'is_profile_loc'] = False
+    #         tweet_df.loc[index, 'profile_loc'] = None
+    #     else:
+    #         tweet_df.loc[index, 'is_profile_loc'] = True
+    #         tweet_df.loc[index, 'profile_loc'] = orig_df.loc[index, 'user']['location']
                 
-    logging.info('ORGANIZING DATA COMPLETE')
+    # logging.info('ORGANIZING DATA COMPLETE')
     
     # Save pkl file
-    tweet_df.to_pickle('hcq_tweets_df.pkl')
+    #tweet_df.to_pickle('hcq_tweets_df.pkl')
     # Load pkl file
-    # tweet_df = pd.read_pickle('hcq_tweets_df.pkl')
+    tweet_df = pd.read_pickle('hcq_tweets_df.pkl')
     
     # Build Network Graph
     network = nx.Graph()

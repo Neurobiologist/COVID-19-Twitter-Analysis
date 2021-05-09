@@ -1,4 +1,5 @@
 # General Imports
+import emoji
 import errno
 import gzip
 import json
@@ -11,6 +12,8 @@ import pandas as pd
 import re
 import sys
 from datetime import datetime
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 from pandas.plotting import register_matplotlib_converters
 
 # Import Google Client Library
@@ -24,8 +27,11 @@ pd.set_option("display.max_rows", None, "display.max_columns", None)
 # Handle date time conversions between pandas and matplotlib
 register_matplotlib_converters()
 
+# NLTK Setup
+nltk.download('all')
+
 # Access the Google NLP API
-CLIENT = language.LanguageServiceClient()
+#CLIENT = language.LanguageServiceClient()
 # Access the COVID19Py API
 COVID = COVID19Py.COVID19(
     url='https://covid19-api.kamaropoulos.com')   # Mirror
@@ -93,14 +99,34 @@ def clean_tweet(tweet):
     tweet = remove_emoji(tweet)
     
     # Tokenize tweet
-    
+    tweet = nltk.word_tokenize(tweet)  
     
     # Remove stopwords
+    stopwords = set(nltk.corpus.stopwords.words("english"))
+    tweet = remove_stopwords(tweet, stopwords)
+
+    # Lemmatize
+    lemmatizer = WordNetLemmatizer() 
+    tweet = lemmatize_tweet(tweet, lemmatizer)
 
     return tweet
 
 def remove_emoji(tweet):
     return emoji.get_emoji_regexp().sub(r'', tweet)
+
+def remove_stopwords(tweet, stopwords):
+    filtered_tweet = []
+    for word in tweet:
+        if word not in stopwords:
+            filtered_tweet.append(word)
+    return filtered_tweet
+            
+
+def lemmatize_tweet(tweet, lemmatizer):
+    lemma_tweet = []
+    for word in tweet:
+        lemma_tweet.append(lemmatizer.lemmatize(word))
+    return " ".join(lemma_tweet)
 
 
 def sentiment_analysis(tweet):
