@@ -23,6 +23,20 @@ from collections import OrderedDict
 from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
 
+
+# Import Google Client Library
+#from google.cloud import language
+# Import COVID-19 Data API
+import COVID19Py
+
+# NLTK Setup
+#nltk.download('all')
+
+# Access the Google NLP API
+#CLIENT = language.LanguageServiceClient()
+# Access the COVID19Py API
+COVID = COVID19Py.COVID19(
+    url='https://covid19-api.kamaropoulos.com')   # Mirror
 # Define directories
 root_dir = '/projectnb/caad/meganmp/data/usa-tweets/' 
 save_dir = '/projectnb/caad/meganmp/analysis/results/network_analysis'
@@ -43,10 +57,7 @@ def rank_entities(entity):
     return first_n_values
 
 
-def remove_emoji(loc):
-    return emoji.get_emoji_regexp().sub(r'', loc)
-
-def preprocess_location(loc):
+#def preprocess_location(loc):
     # Remove emoji
     try:
         loc = remove_emoji(loc)
@@ -132,7 +143,10 @@ def main():
                         logging.info('Processing %s', file)
                         with open(os.path.join(root_dir, date_dir, file), 'rb') as f:
                             gzip_f = gzip.GzipFile(fileobj=f)
-                            orig_df = pd.read_json(gzip_f, lines=True)
+                            try:
+                                orig_df = pd.read_json(gzip_f, lines=True)
+                            except:
+                                continue
         
     # Drop extraneous information    
     orig_df = orig_df.drop('id_str', 1)
@@ -226,7 +240,7 @@ def main():
     logging.info('ORGANIZING DATA COMPLETE')
     
     # Save pkl file
-    tweet_df.save_pickle('usa_tweets_df.pkl')
+    tweet_df.to_pickle('usa_tweets_df.pkl')
     # Load pkl file
     # tweet_df = pd.read_pickle('usa_tweets_df.pkl')
     
@@ -253,38 +267,38 @@ def main():
             
     with open('network_analysis-expanded.txt', 'w') as file_out:
         file_out.write('Nodes = {}\n'.format(network.number_of_nodes()))
-        file_out.write('Edges = {}'.format(network.number_of_edges()))
-        file_out.write('Max Degree = {}'.format(np.max(degrees)))
-        file_out.write('Average degree = {}'.format(np.mean(degrees)))
-        file_out.write('Most frequent degree = {}'.format(stats.mode(degrees)[0][0]))
-        file_out.write('# Connected Components = {}'.format(nx.number_connected_components(network)))
+        file_out.write('Edges = {}\n'.format(network.number_of_edges()))
+        file_out.write('Max Degree = {}\n'.format(np.max(degrees)))
+        file_out.write('Average degree = {}\n'.format(np.mean(degrees)))
+        file_out.write('Most frequent degree = {}\n'.format(stats.mode(degrees)[0][0]))
+        file_out.write('# Connected Components = {}\n'.format(nx.number_connected_components(network)))
     
         if nx.is_connected(network):
-            file_out.write('Network is connected.')
+            file_out.write('Network is connected.\n')
         else:
-            file_out.write('Network not connected.')
+            file_out.write('Network not connected.\n')
         
-        file_out.write('Largest Subgraph Analysis')
-        file_out.write('Nodes = {}'.format(subnetwork.number_of_nodes()))
-        file_out.write('Edges = {}'.format(subnetwork.number_of_edges()))
-        file_out.write('Max Degree = {}'.format(np.max(sub_degrees)))
-        file_out.write('Average degree = {}'.format(np.mean(sub_degrees)))
-        file_out.write('Most frequent degree = {}'.format(stats.mode(sub_degrees)[0][0]))
-        file_out.write('# Connected Components = {}'.format(nx.number_connected_components(subnetwork)))
+        file_out.write('\nLargest Subgraph Analysis\n')
+        file_out.write('Nodes = {}\n'.format(subnetwork.number_of_nodes()))
+        file_out.write('Edges = {}\n'.format(subnetwork.number_of_edges()))
+        file_out.write('Max Degree = {}\n'.format(np.max(sub_degrees)))
+        file_out.write('Average degree = {}\n'.format(np.mean(sub_degrees)))
+        file_out.write('Most frequent degree = {}\n'.format(stats.mode(sub_degrees)[0][0]))
+        file_out.write('# Connected Components = {}\n'.format(nx.number_connected_components(subnetwork)))
         
     degree_dict = dict(network.degree())
     most_connected_user = max(dict(network.degree()).items(), key = lambda x: x[1])
 
     plt.figure(figsize=(50,50))
     nx.draw(network)
-    plt.savefig('network-expanded.jpg')
+    plt.savefig('network-usa.jpg')
     
     plt.figure(figsize=(50,50))
     nx.draw(subnetwork)
-    plt.savefig('subnetwork-expanded.jpg')
+    plt.savefig('subnetwork-usa.jpg')
     
     # Sentiment analysis of most_connected_user's tweets
-    
+    print('here')
     
 
     

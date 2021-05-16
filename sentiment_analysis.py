@@ -112,6 +112,9 @@ def clean_tweet(tweet):
     # Lemmatize
     lemmatizer = WordNetLemmatizer() 
     tweet = lemmatize_tweet(tweet, lemmatizer)
+    
+    # Reconstitute tweet
+    tweet = ' '.join(tweet)
 
     return tweet
 
@@ -340,10 +343,10 @@ def main():
                         tweet_data['Marker Color'] = tweet_data.apply(
                             lambda row: mkr(row['Interpretation']), axis=1)
 
-    logging.info('[Twitter Data] Processing Complete')
     loop_end = datetime.now()
     loop_time = loop_end - loop_start
     logging.info('Loop Completion Time = %s', loop_time)
+    logging.info('[Twitter Data] Processing Complete')
 
     visualize(tweet_data, covid_data)
 

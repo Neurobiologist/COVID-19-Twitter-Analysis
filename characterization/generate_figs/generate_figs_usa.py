@@ -77,8 +77,8 @@ def main():
     #                       y='Total Tweets',
     #                       data = tweet_totals)
     # barplot.set(title = 'COVID-19 Tweets from Jan-Jun 2020',
-    #                                                xlabel='Month',
-    #                                                ylabel='Total Tweets (Thousands)')
+    #                                                 xlabel='Month',
+    #                                                 ylabel='Total Tweets (Thousands)')
     
     # plt.ticklabel_format(style='plain', axis='y')
     # yticks = barplot.get_yticks()/1000
@@ -93,16 +93,16 @@ def main():
     # labeled_map = folium.Map(location=[39, -100], zoom_start=4)
     
     # Plot location markers on map
-    # geolocator = Nominatim(user_agent='Class_Project')
-    # for key in top100locations.keys():
-    #     try:
-    #         user_location = geolocator.geocode(key, country_codes='us')
-    #     except:
-    #         continue
-    #     if user_location:
-    #         folium.Marker([user_location.latitude, user_location.longitude], popup=user_location.address).add_to(usa_tweets_map)
-    #         folium.Marker([user_location.latitude, user_location.longitude], popup=key).add_to(labeled_map)
-    #         location_map_dict[key] = [[user_location.latitude, user_location.longitude], user_location.address]
+    geolocator = Nominatim(user_agent='Class_Project')
+    for key in top100locations.keys():
+        try:
+            user_location = geolocator.geocode(key, country_codes='us')
+        except:
+            continue
+        if user_location:
+            folium.Marker([user_location.latitude, user_location.longitude], popup=user_location.address).add_to(usa_tweets_map)
+            folium.Marker([user_location.latitude, user_location.longitude], popup=key).add_to(labeled_map)
+            location_map_dict[key] = [[user_location.latitude, user_location.longitude], user_location.address]
             
             
     # usa_tweets_map.save('usa_tweets_map.html')
