@@ -5,7 +5,9 @@ Average degree = 1.7152635181382614
 Most frequent degree = 1
 # Connected Components = 228
 Network not connected.
-Largest Subgraph AnalysisNodes = 646
+
+Largest Subgraph Analysis
+Nodes = 646
 Edges = 655
 Max Degree = 296
 Average degree = 2.027863777089783
