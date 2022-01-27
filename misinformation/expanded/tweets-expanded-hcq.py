@@ -1,13 +1,8 @@
+# -*- coding: utf-8 -*-
 '''
 Isolate and Characterize Hydroxychloroquine Tweets (Modified for expanded dataset)
-COVID-19 Analysis | meganmp@bu.edu
+COVID-19 Analysis | meganmp [at] bu [dot] edu
 '''
-
-# -*- coding: utf-8 -*-
-"""
-COVID-19 Original Dataset Characterization of Self-Reported Locations
-Megan M. Parsons | meganmp@bu.edu
-"""
 
 # Imports
 import csv
@@ -20,15 +15,14 @@ import unidecode
 from collections import OrderedDict
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/data/usa-tweets/'
-save_dir = '/projectnb/caad/meganmp/data/misinformation/expanded/' 
+root_dir = '/data/usa-tweets/'
+save_dir = '/data/misinformation/expanded/' 
 
 def rank_locations(loc_dict):
     ''' Return top 100 locations from location dictionary'''
     loc_dict = OrderedDict(sorted(loc_dict.items(), key=lambda x: x[1], reverse=True))
     first_n_values = list(loc_dict.items())[:100]
     return first_n_values
-
 
 def remove_emoji(loc):
     return emoji.get_emoji_regexp().sub(r'', loc)
