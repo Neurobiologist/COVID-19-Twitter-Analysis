@@ -34,4 +34,4 @@ echo "Job ID : $JOB_ID  $SGE_TASK_ID"
 echo "=========================================================="
 
 module load python3
-python /projectnb/caad/meganmp/analysis/preprocessing/location-filter-jan.py
+python /analysis/preprocessing/location-filter-jan.py
