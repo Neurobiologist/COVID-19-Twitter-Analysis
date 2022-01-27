@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 COVID-19 Original Dataset: Figure Generation
-Megan M. Parsons | meganmp@bu.edu
+Megan M. Parsons | meganmp [at] bu [dot] edu
 """
 
 # Imports
@@ -21,8 +21,8 @@ from fuzzywuzzy import fuzz
 from collections import OrderedDict
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/analysis/results/characterization/master/'
-save_dir = '/projectnb/caad/meganmp/analysis/results/characterization/master/'
+root_dir = '/characterization/master/'
+save_dir = '/characterization/master/'
 
 
 def open_json(file):
@@ -76,7 +76,6 @@ def main():
 
     ################# PLOTS ##################################################
     # Plot of tweet totals per month
-    # Plot of tweet totals per month
     barplot = sns.barplot(x='Month',
                           y='Total Tweets',
                           data=tweet_totals)
@@ -86,13 +85,10 @@ def main():
 
     plt.ticklabel_format(style='plain', axis='y')
     plt.yticks(barplot.get_yticks(), barplot.get_yticks() /1000000)
-    #yticks = barplot.get_yticks()/1000
-    #yticks = [int(x) for x in yticks]
-    #barplot.set_yticklabels(yticks)
     plt.setp(barplot.get_xticklabels(), rotation=45)
     plt.figure(figsize=(32, 24))
     sns.set(font_scale=1)
-    barplot.figure.savefig('/projectnb/caad/meganmp/analysis/results/characterization/master/master_tweet_volume.jpg', bbox_inches = "tight")
+    barplot.figure.savefig('master_tweet_volume.jpg', bbox_inches = "tight")
 
     # Plot top 100 locations on map
     master_tweets_map = folium.Map()
@@ -123,6 +119,7 @@ def main():
     # What if we associate the same identified locations in the top 100 locations
     # in the USA with the keys; does this mean that those keys in the flipped
     # dictionary are equivalent?
+    
     consolidated_locs = dict()
 
     for key, value in location_map_dict.items():
@@ -133,13 +130,9 @@ def main():
 
     print(consolidated_locs)
     consolidated_locs_length = len(consolidated_locs)
-    # CONCLUSION: Top 100 locaitons is actually representative of 82 locations.
-    # 
 
     print('done')
     
     
-
-
 if __name__ == "__main__":
     main()
