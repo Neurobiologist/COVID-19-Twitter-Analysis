@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 COVID-19 Original Dataset Characterization of Self-Reported Locations
-Megan M. Parsons | meganmp@bu.edu
+Megan M. Parsons | meganmp [at] bu [dot] edu
 """
 
 # Imports
@@ -15,8 +15,8 @@ import unidecode
 from collections import OrderedDict
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/data/COVID-19-TweetIDs-master'
-save_dir = '/projectnb/caad/meganmp/analysis/results/master_hashtags' 
+root_dir = '/data/COVID-19-TweetIDs-master'
+save_dir = '/analysis/results/master_hashtags' 
 
 def rank_locations(loc_dict):
     ''' Return top 100 locations from location dictionary'''
@@ -106,18 +106,9 @@ def main():
     with open(os.path.join(save_dir, 'geotagged_master.txt'), 'w') as f:
         f.write('%d' % is_geotagged)
 
-        
     logging.info('Processing Complete')
 
 
 if __name__ == "__main__":
     main()
             
-        
-        
-
-      
-
-
-
-
