@@ -13,8 +13,8 @@ import logging
 def main():
     # Define directories
     # '/projectnb/caad/meganmp/data/english-tweets'
-    root_dir = '/projectnb/caad/meganmp/data/one-day'
-    save_dir = '/projectnb/caad/meganmp/data/one-day-results'
+    root_dir = '/data/one-day'
+    save_dir = '/data/one-day-results'
 
     # Create log
     logging.basicConfig(
@@ -72,7 +72,7 @@ def main():
 
     # Save monthly totals dictionary
     print('Saving monthly totals')
-    with open('/projectnb/caad/meganmp/analysis/one-day-4core-total.json', 'w', encoding='utf-8') as f:
+    with open('/analysis/one-day-4core-total.json', 'w', encoding='utf-8') as f:
         json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
 
     logging.info('Preprocessing Complete')
