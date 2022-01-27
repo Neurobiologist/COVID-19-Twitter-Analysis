@@ -15,8 +15,8 @@ def main():
     DN = "%02d" % DN
 
     # Define directories
-    root_dir = '/projectnb/caad/meganmp/data/english-tweets'
-    save_dir = '/projectnb/caad/meganmp/data/usa-tweets'
+    root_dir = '/data/english-tweets'
+    save_dir = '/data/usa-tweets'
 
     # Create log
     logging.basicConfig(filename='data-feb.log', level=logging.DEBUG, format='%(levelname)s\t%(asctime)s\t%(message)s') # MODIFY
@@ -76,7 +76,7 @@ def main():
                 
     # Save monthly totals dictionary
     print('Saving monthly totals')
-    with open('/projectnb/caad/meganmp/analysis/preprocessing/feb.json', 'w', encoding='utf-8') as f:
+    with open('/analysis/preprocessing/feb.json', 'w', encoding='utf-8') as f:
         json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
     
     logging.info('Preprocessing Complete')
