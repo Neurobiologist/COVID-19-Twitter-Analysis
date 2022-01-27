@@ -1,10 +1,8 @@
+# -*- coding: utf-8 -*-
 '''
 Hydroxychloroquine Tweets: Analyze Keywords and Timeline
-COVID-19 Analysis | meganmp@bu.edu
+COVID-19 Analysis | meganmp [at] bu [dot] edu
 '''
-
-# -*- coding: utf-8 -*-
-
 
 # Imports
 import csv
@@ -50,10 +48,9 @@ CLIENT = language.LanguageServiceClient()
 COVID = COVID19Py.COVID19(
     url='https://covid19-api.kamaropoulos.com')   # Mirror
 
-
 # Define directories
-root_dir = '/projectnb/caad/meganmp/data/misinformation/'
-save_dir = '/projectnb/caad/meganmp/analysis/results/misinformation/keywords'
+root_dir = '/data/misinformation/'
+save_dir = '/analysis/results/misinformation/keywords'
 
 # Pandas Settings
 pd.set_option('max_colwidth', 280)  # Capture full tweet
@@ -414,8 +411,6 @@ def main():
 
     # Save pkl file
     tweet_df.to_pickle('hcq_tweets_df.pkl')
-    # # Load pkl file
-    #tweet_df = pd.read_pickle('hcq_tweets_df.pkl')
 
     # Build Network Graph
     network = nx.Graph()
@@ -430,8 +425,6 @@ def main():
             network.add_edge(user_id, int_id, tweet_id=tweet_id)
             network.nodes[user_id]["name"] = user_name
             network.nodes[int_id]["name"] = int_name
-
-   
 
     # Identify largest subnetwork
     subnetwork = network.subgraph(
