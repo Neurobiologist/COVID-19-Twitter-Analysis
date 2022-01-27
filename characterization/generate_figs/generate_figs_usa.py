@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 COVID-19 Final Dataset: Figure Generation
-Megan M. Parsons | meganmp@bu.edu
+Megan M. Parsons | meganmp [at] bu [dot] edu
 """
 
 # Imports
@@ -21,8 +21,8 @@ from fuzzywuzzy import fuzz
 from collections import OrderedDict
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/'
-save_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/' 
+root_dir = '/characterization/usa-tweets/'
+save_dir = '/characterization/usa-tweets/' 
 
 def open_json(file):
     with open(os.path.join(root_dir, file), 'r') as f:
@@ -57,7 +57,6 @@ def main():
     
     # Initialize variables
     location_map_dict = dict()
-
     
     # Load data
     logging.info('Loading data')
@@ -73,24 +72,24 @@ def main():
     
     ################# PLOTS ##################################################
     # Plot of tweet totals per month
-    # barplot = sns.barplot(x='Month',
-    #                       y='Total Tweets',
-    #                       data = tweet_totals)
-    # barplot.set(title = 'COVID-19 Tweets from Jan-Jun 2020',
-    #                                                 xlabel='Month',
-    #                                                 ylabel='Total Tweets (Thousands)')
+    barplot = sns.barplot(x='Month',
+                          y='Total Tweets',
+                          data = tweet_totals)
+    barplot.set(title = 'COVID-19 Tweets from Jan-Jun 2020',
+                                                    xlabel='Month',
+                                                    ylabel='Total Tweets (Thousands)')
     
-    # plt.ticklabel_format(style='plain', axis='y')
-    # yticks = barplot.get_yticks()/1000
-    # yticks = [int(x) for x in yticks]
-    # barplot.set_yticklabels(yticks)
-    # barplot.figure.savefig('usa_tweet_volume.jpg')
-    # barplot.figure.savefig('usa_tweet_volume.png')
+    plt.ticklabel_format(style='plain', axis='y')
+    yticks = barplot.get_yticks()/1000
+    yticks = [int(x) for x in yticks]
+    barplot.set_yticklabels(yticks)
+    barplot.figure.savefig('usa_tweet_volume.jpg')
+    barplot.figure.savefig('usa_tweet_volume.png')
     
     # Plot top 100 locations on map
     # Generate Map
-    # usa_tweets_map = folium.Map(location=[39, -100], zoom_start=4)
-    # labeled_map = folium.Map(location=[39, -100], zoom_start=4)
+    usa_tweets_map = folium.Map(location=[39, -100], zoom_start=4)
+    labeled_map = folium.Map(location=[39, -100], zoom_start=4)
     
     # Plot location markers on map
     geolocator = Nominatim(user_agent='Class_Project')
@@ -105,14 +104,10 @@ def main():
             location_map_dict[key] = [[user_location.latitude, user_location.longitude], user_location.address]
             
             
-    # usa_tweets_map.save('usa_tweets_map.html')
-    # labeled_map.save('labeled_map.html')
-    # json.dump(location_map_dict, open( "location_map_dict.json", 'w' ) )
+    usa_tweets_map.save('usa_tweets_map.html')
+    labeled_map.save('labeled_map.html')
+    json.dump(location_map_dict, open( "location_map_dict.json", 'w' ) )
                 
-        
-        
-        
-    
     ###########################################################################
     # Can we associate similar locations based on Levenshtein distance?
     str1 = 'usa'
@@ -136,32 +131,7 @@ def main():
         else:
             consolidated_locs[value[1]].append(key)
     
-    print(consolidated_locs)
     consolidated_locs_length = len(consolidated_locs)
-    # CONCLUSION: Our top 100 list is actually a top 72 list.
-    
-    
-    
-    print('done')
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     # Save top 100 locations in csv
     logging.info('Saving top 100 locations csv')
