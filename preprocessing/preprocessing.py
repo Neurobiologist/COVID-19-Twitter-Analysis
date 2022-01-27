@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 COVID-19 Twitter Analysis: Preprocessing Pipeline
-Megan M. Parsons | meganmp@bu.edu
+Megan M. Parsons | meganmp [at] bu [dot] edu
 INSTRUCTIONS: To run, type into terminal: ./preprocessing.py >> out.txt 
 """
 
@@ -14,8 +14,8 @@ from collections import Counter
 from pprint import pprint as pp
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/data/COVID-19-TweetIDs-master'
-save_dir = '/projectnb/caad/meganmp/data/english-tweets'
+root_dir = '/data/COVID-19-TweetIDs-master'
+save_dir = '/data/english-tweets'
 
 def main():
     ''' Preprocess COVID-19 Twitter Data'''
@@ -60,7 +60,7 @@ def main():
     
     # Save monthly totals dictionary
     logging.info('Saving monthly totals')
-    with open('/projectnb/caad/meganmp/analysis/monthly_totals-english.json', 'w', encoding='utf-8') as f:
+    with open('/analysis/monthly_totals-english.json', 'w', encoding='utf-8') as f:
         json.dump(monthly_totals, f, ensure_ascii=False, indent=4)
     
     # Generate location totals
@@ -73,7 +73,7 @@ def main():
     
     # Save location totals dictionary
     logging.info('Saving location totals')
-    with open('/projectnb/caad/meganmp/analysis/location_totals-english.json', 'w') as f2:
+    with open('/analysis/location_totals-english.json', 'w') as f2:
         json.dump(location_totals, f2)
     
     logging.info('Preprocessing Complete')
@@ -82,12 +82,3 @@ def main():
 if __name__ == "__main__":
     main()
            
-            
-        
-        
-
-      
-
-
-
-
