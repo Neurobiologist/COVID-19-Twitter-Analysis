@@ -1,8 +1,7 @@
 '''
 Network Analysis Experiments - Master Dataset
-COVID-19 Analysis | meganmp@bu.edu
+COVID-19 Analysis | meganmp [at] bu [dot] edu
 '''
-
 
 # Imports
 import csv
@@ -56,8 +55,7 @@ def rank_entities(entity):
     first_n_values = list(entity.items())[:100]
     return first_n_values
 
-
-#def preprocess_location(loc):
+def preprocess_location(loc):
     # Remove emoji
     try:
         loc = remove_emoji(loc)
@@ -241,8 +239,6 @@ def main():
     
     # Save pkl file
     tweet_df.to_pickle('usa_tweets_df.pkl')
-    # Load pkl file
-    # tweet_df = pd.read_pickle('usa_tweets_df.pkl')
     
     # Build Network Graph
     network = nx.Graph()
@@ -296,84 +292,6 @@ def main():
     plt.figure(figsize=(50,50))
     nx.draw(subnetwork)
     plt.savefig('subnetwork-usa.jpg')
-    
-    # Sentiment analysis of most_connected_user's tweets
-    print('here')
-    
-
-    
-    
-    
-    
-    
-    ##########################################################################
-    # Hashtag Count Relative to Retweet Status
-    # plt.figure(figsize=(24,16))
-    # sns.set(font_scale=2)
-    # hashable_df = tweet_df.explode('hashtags')
-    # hashable_df = hashable_df[hashable_df['hashtags'] != 'hydroxychloroquine']
-    # hashtag_count = sns.countplot(data=hashable_df,
-    #                               y = 'hashtags',
-    #                               hue = 'is_retweet',
-    #                               order=pd.value_counts(hashable_df['hashtags']).iloc[1:10].index).set(title='Most Common Hashtags on Hydroxychloroquine Tweets')
-    # plt.savefig('HCQ_hashtag_count_cf_RT_status.jpg')
-    
-    
-    # Keyword Frequency Plot
-    # hcq_keywords = pd.Series(sum([item for item in tweet_df.hashtags], [])).value_counts()
-    # hashtag_df = hcq_keywords.to_frame()
-    # hashtag_df = hashtag_df.reset_index()
-    # hashtag_df.columns = ['hashtag','frequency']
-    # plt.figure(figsize=(30,25))
-    # sns.set(font_scale = 3.5)
-    # plt.xticks(rotation=30)
-    # keyword_freq_plot = sns.barplot(data=hashtag_df[1:10], x = 'hashtag',
-    #                                 y= 'frequency').set(title='Most Frequently Used Hashtags in Hydroxychloroquine Dataset',
-    #                                                     xlabel='Hashtag',
-    #                                                     ylabel='Count')
-    # plt.savefig('HCQ_hashtag_frequency.png')
-    # plt.savefig('HCQ_hashtag_frequency.jpg')
-    
-    # Plot coordinates of Tweet origin
-    # There are none reported.
-    
-    # Tweet Hashtag Over Time
-    # Tweets per time bin (every 4 hours)
-    # sns.set(font_scale=2)
-    # HCQ_bin_df = tweet_df.groupby(pd.Grouper(key='created_at', freq='4H', convention='start')).size()
-    # plt.figure(figsize=(30,25))
-    # ex = sns.lineplot(data=HCQ_bin_df).set(ylabel='Tweet Count', xlabel='Date (4H Time Bin)',
-    #                                        title='#hydroxychloroquine Tweets per 4H Time Bin (May-June 2020)')
-    # plt.grid(True)
-    # plt.savefig('Hashtag_HCQ_Tweets_Over_Time.jpg')
-    
-    
-   
-    
-
-
-   
-    
-   
-    
-   
-    
-   
-    
-    # # Rank top 100 locations
-    # logging.info('Ranking top 100 locations')
-    # top100locs = rank_entites(location_totals)
-        
-    # # Save top 100 locations in csv
-    # logging.info('Saving top 100 locations csv')
-    # with open(os.path.join(save_dir, 'top100locations-hcq.csv'), 'w') as f3:
-    #     write = csv.writer(f3)
-    #     write.writerow(top100locs)
-
-    # # Save location totals dictionary
-    # logging.info('Saving location totals')
-    # with open(os.path.join(save_dir, 'location_totals-hcq.json'), 'w') as f4:
-    #     json.dump(location_totals, f4)
         
     logging.info('Processing Complete')
 
@@ -381,11 +299,3 @@ def main():
 if __name__ == "__main__":
     main()
             
-        
-        
-
-      
-
-
-
-
