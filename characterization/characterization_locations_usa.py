@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 COVID-19 Final Dataset Characterization of Self-Reported Locations
-Megan M. Parsons | meganmp@bu.edu
+Megan M. Parsons | meganmp [at] bu [dot] edu
 """
 
 # Imports
@@ -15,8 +15,8 @@ import unidecode
 from collections import OrderedDict
 
 # Define directories
-root_dir = '/projectnb/caad/meganmp/data/usa-tweets/'
-save_dir = '/projectnb/caad/meganmp/analysis/results/characterization/usa-tweets/' 
+root_dir = '/data/usa-tweets/'
+save_dir = '/analysis/results/characterization/usa-tweets/' 
 
 def rank_locations(loc_dict):
     ''' Return top 100 locations from location dictionary'''
@@ -116,11 +116,3 @@ def main():
 if __name__ == "__main__":
     main()
             
-        
-        
-
-      
-
-
-
-
