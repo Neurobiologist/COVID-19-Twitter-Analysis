@@ -1,4 +1,4 @@
 name: null
 channels:
   - defaults
-prefix: /projectnb/caad/meganmp/.conda/env
+prefix: /.conda/env
