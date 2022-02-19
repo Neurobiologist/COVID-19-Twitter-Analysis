@@ -250,8 +250,8 @@ def main():
     DATE = '2020-01'
 
     # Define directories
-    root_dir = '/projectnb/caad/meganmp/data/usa-tweets'
-    analysis_dir = '/projectnb/caad/meganmp/analysis/results/sentiment_analysis/'
+    root_dir = '/data/usa-tweets'
+    analysis_dir = '/analysis/results/sentiment_analysis/'
     save_dir = make_datetime_dir(analysis_dir)
 
     # Create log
