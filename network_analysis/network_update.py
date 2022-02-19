@@ -41,7 +41,7 @@ def get_interactions(row):
     interactions.discard(('nan', 'None'))
     interactions.discard(('nan', 'nan'))
 
-    return [row['user_id'], row['user_name']], interactions
+    return [str(row['user_id']), str(row['user_name'])], interactions
 
 def preprocess_tweet(tweet):
     ''' Return full text of cleaned up tweet '''
@@ -190,6 +190,7 @@ def main():
     # Build Network Graph
     network = nx.Graph()
     colors = []
+    tweet_df['marker_color'] = tweet_df['marker_color'].astype('str')
     
     for index, row in tweet_df.iterrows():
         user, interactions = get_interactions(row)
@@ -204,8 +205,11 @@ def main():
                
     for node in network:
         if node in tweet_df['user_id'].values:
-            colors = colors.append(tweet_df.loc[tweet_df['user_id'] == node]['marker_color'])
-        else: colors = colors.append("moccasin")
+            colors.append((tweet_df.loc[tweet_df['user_id'] == node]['marker_color']).values[0])
+        elif int(float(node)) in tweet_df['user_id'].values:
+            colors.append((tweet_df.loc[tweet_df['user_id'] == node]['marker_color']).values[0])
+        else:
+            colors.append("moccasin")
     
     # Identify largest subnetwork
     subnetwork = network.subgraph(max(nx.connected_components(network), key=len))
