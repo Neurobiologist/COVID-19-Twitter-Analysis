@@ -147,14 +147,14 @@ def evaluate(score):
 def mkr(interp):
     ''' Assign marker based on interpretation '''
     if interp == '++':
-        return 'teal'
+        return 'blue'
     if interp == '+':
-        return 'lightblue'
+        return 'teal'
     if interp == ' ':
         return 'moccasin'
     if interp == '-':
         return 'mistyrose'
-    return 'maroon'
+    return 'red'
 
 
 def tweet_polarity(tweet_data):
@@ -190,6 +190,7 @@ def main():
     # Build Network Graph
     network = nx.Graph()
     colors = []
+    subnet_colors = []
     tweet_df['marker_color'] = tweet_df['marker_color'].astype('str')
     
     for index, row in tweet_df.iterrows():
@@ -214,9 +215,18 @@ def main():
     # Identify largest subnetwork
     subnetwork = network.subgraph(max(nx.connected_components(network), key=len))
     
+    for node in subnetwork:
+        if node in tweet_df['user_id'].values:
+            subnet_colors.append((tweet_df.loc[tweet_df['user_id'] == node]['marker_color']).values[0])
+        elif int(float(node)) in tweet_df['user_id'].values:
+            subnet_colors.append((tweet_df.loc[tweet_df['user_id'] == node]['marker_color']).values[0])
+        else:
+            subnet_colors.append("moccasin")    
+    
     # Calculate degrees of each node
     degrees = [deg for (node, deg) in network.degree()]
     sub_degrees = [deg for (node, deg) in subnetwork.degree()]
+    subnet_degrees = dict(subnetwork.degree)
             
     with open('network_analysis-expanded-update-noRTorUM.txt', 'w') as file_out:
         file_out.write('Nodes = {}\n'.format(network.number_of_nodes()))
@@ -241,11 +251,12 @@ def main():
     
 
     plt.figure(figsize=(50,50))
-    nx.draw(network)
+    nx.draw(network, node_color=colors)
     plt.savefig('network-usa-update-noRToruM-color.jpg')
     
     plt.figure(figsize=(50,50))
-    nx.draw(subnetwork)
+    nx.draw(subnetwork, node_color=subnet_colors,
+            node_size=[v * 1000 for v in subnet_degrees.values()])
     plt.savefig('subnetwork-usa-update-noRToruM-color.jpg')
 
 if __name__ == "__main__":
