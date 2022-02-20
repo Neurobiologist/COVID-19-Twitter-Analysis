@@ -9,3 +9,4 @@ carmen-python/
 google_nlp/
 *.qlog
 *.log
+*.pkl
