@@ -26,11 +26,11 @@ def get_interactions(row):
     interactions = set()
     
     # Replies
-    interactions.add((str(row["in_reply_to_user_id"]), str(row["in_reply_to_screen_name"])))
+    #interactions.add((str(row["in_reply_to_user_id"]), str(row["in_reply_to_screen_name"])))
     # Retweets
     #interactions.add((str(row["retweeted_id"]), str(row["retweeted_screen_name"])))
     # User Mentions
-    #interactions.add((str(row["user_mention_id"]), str(row["user_mention_screen_name"])))
+    interactions.add((str(row["user_mention_id"]), str(row["user_mention_screen_name"])))
     
     # Discard user
     interactions.discard(row["user_id"])
@@ -210,7 +210,7 @@ def main():
         elif int(float(node)) in tweet_df['user_id'].values:
             colors.append((tweet_df.loc[tweet_df['user_id'] == node]['marker_color']).values[0])
         else:
-            colors.append("moccasin")
+            colors.append("black")
     
     # Identify largest subnetwork
     subnetwork = network.subgraph(max(nx.connected_components(network), key=len))
@@ -221,7 +221,7 @@ def main():
         elif int(float(node)) in tweet_df['user_id'].values:
             subnet_colors.append((tweet_df.loc[tweet_df['user_id'] == node]['marker_color']).values[0])
         else:
-            subnet_colors.append("moccasin")    
+            subnet_colors.append("black")    
     
     # Calculate degrees of each node
     degrees = [deg for (node, deg) in network.degree()]
