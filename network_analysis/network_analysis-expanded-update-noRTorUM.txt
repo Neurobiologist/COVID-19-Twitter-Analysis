@@ -1,15 +1,15 @@
-Nodes = 13691
-Edges = 11948
-Max Degree = 555
-Average degree = 1.7453801767584545
-Most frequent degree = 1
-# Connected Components = 2803
+Nodes = 10239
+Edges = 2026
+Max Degree = 158
+Average degree = 0.39574177165738844
+Most frequent degree = 0
+# Connected Components = 8316
 Network not connected.
 
 Largest Subgraph Analysis
-Nodes = 7004
-Edges = 8019
-Max Degree = 555
-Average degree = 2.2898343803540833
+Nodes = 1140
+Edges = 1189
+Max Degree = 158
+Average degree = 2.085964912280702
 Most frequent degree = 1
 # Connected Components = 1
