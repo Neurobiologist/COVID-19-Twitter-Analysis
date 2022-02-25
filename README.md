@@ -4,8 +4,6 @@ Coronavirus disease 2019 (COVID-19), caused by the novel coronavirus SARS-CoV-2,
 
 Because misinformation is somewhat imprecisely defined in the academic literature, we chose to focus our analysis on hydroxychloroquine, which was introduced as a Twitter hashtag during initial data collection and was widely touted as a potential COVID-19 therapeutic despite study limitations and methodological concerns surrounding the initial supporting studies. [[5]](#5) Understanding the possible relationship between microblogging communications and public perception may provide insight into the types of communications that increase compliance with government recommendations and public health guidelines. Furthermore, characterizing “misinformation” and tracking its propagation through social networks can inform strategies to prevent the spread of inaccurate information during public health crises. 
 
-<br>
-
 ## Dataset
 
 This dataset is composed of publicly-available Twitter data (Tweet IDs) associated with SARS-CoV-2 from late January through June 2020. [[6]](#6) The Tweet IDs are sourced from the GitHub repository _COVID-19 Tweet IDs_, which used both the Twitter streaming API and search API to gather historic and real-time Tweet IDs according to specific COVID-19 keywords and user accounts of interest. Although this dataset is volume-limited at the time of stream/search and subject to fluctuations in internet quality, it provides almost 200 million COVID-19 Tweets to analyze.
@@ -35,19 +33,14 @@ There are several ways to elucidate a Tweet’s location of origin: (1) geo-tagg
 
 These may not necessarily be representative of the top locations where COVID-19 Tweets have originated. This is often due to the flexibility of user inputs resulting in variability in the raw location string (e.g., ‘United States’ and ‘USA’ are considered separate locations in the count). It was observed, however, that variability also arose though subtle variations in character or diacritic usage (‘Mexico’ vs. ‘México’),   the inclusion of differing combinations of city, state, and/or country information (‘San Francisco, CA’ vs. ‘San Francisco, CA, USA’), and the inclusion or exclusive use of flag emoji (‘Australia’ vs. ‘Australia’ vs. ‘’). We use this information to develop a location processing pipeline used in later visualizations.
 
-<br>
-
 ## Preprocessing Pipeline
 
-<br>
 
 ## Data Cleaning for Sentiment Analysis
 
-<br>
-
 ## Investigating Misinformation: Hydroxychloroquine Tweet Analysis
 
-<br>
+
 
 ## Hydroxychloroquine Twitter Network Analysis
 
