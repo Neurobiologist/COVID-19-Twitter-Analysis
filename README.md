@@ -10,6 +10,14 @@ Because misinformation is somewhat imprecisely defined in the academic literatur
 
 ## Data Preprocessing Pipeline
 
+This dataset is composed of publicly-available Twitter data (Tweet IDs) associated with SARS-CoV-2 from late January through June 2020.[[6]](#6) The Tweet IDs are sourced from the GitHub repository _COVID-19 Tweet IDs_, which used both the Twitter streaming API and search API to gather historic and real-time Tweet IDs according to specific COVID-19 keywords and user accounts of interest. Although this dataset is volume-limited at the time of stream/search and subject to fluctuations in internet quality, it provides almost 200 million COVID-19 Tweets to analyze.
+
+We observe a slight delay in the addition of keywords after nomenclature is formally introduced, which suggests that the earliest Tweets captured in the dataset under a particular keyword might not be representative of some of the earliest topical Tweets. For instance, the World Health Organization (WHO) released a statement on 11 February 2020 declaring official names for the virus that causes the novel coronavirus disease as well as the disease it causes.[[7]](#7) These terms (COVID-19 and SARS-CoV-2) were not added to the keyword list until 16 February 2020 and 06 March 2020, respectively, and some derivatives of these terms (COVIDー19, COVID__19) were not added until later.[[8]](#8)
+
+[Raw Data](Images/raw_data.jpg)
+
+The Tweet IDs were hydrated using Twarc, resulting in Tweet objects stored in gzipped JSON Lines files.[[10]](#9)
+
 <br>
 
 ## Data Cleaning for Sentiment Analysis
@@ -35,3 +43,11 @@ Because misinformation is somewhat imprecisely defined in the academic literatur
 <a id="4">[4]</a> J. Roozenbeek et al., “Susceptibility to misinformation about COVID-19 around the world: Susceptibility to COVID misinformation,” R. Soc. Open Sci., vol. 7, no. 10, Oct. 2020.</a>
 
 <a id="5">[5]</a> P. Bansal et al., “Hydroxychloroquine: a comprehensive review and its controversial role in coronavirus disease 2019,” Ann. Med., vol. 53, no. 1, pp. 117–134, 2020.</a>
+
+<a id="6">[6]</a> E. Chen, K. Lerman, and E. Ferrara, “Tracking social media discourse about the COVID-19 pandemic: Development of a public coronavirus Twitter data set,” JMIR Public Heal. Surveill., vol. 6, no. 2, p. e19273, Apr. 2020.</a>
+
+<a id="7">[7]</a> “Naming the coronavirus disease (COVID-19) and the virus that causes it.” [Online]. Available: https://www.who.int/emergencies/diseases/novel-coronavirus-2019/technical-guidance/naming-the-coronavirus-disease-(covid-2019)-and-the-virus-that-causes-it. [Accessed: 05-May-2021].</a>
+
+<a id="8">[8]</a> E. Chen, E. Lerman, and K. Ferrara, “COVID-19-TweetIDs,” 2020. [Online]. Available: https://github.com/echen102/COVID-19-TweetIDs. [Accessed: 05-May-2021].</a>
+
+<a id="9">[9]</a>  “DocNow/twarc: A command line tool (and Python library) for archiving Twitter JSON.” [Online]. Available: https://github.com/DocNow/twarc. [Accessed: 07-May-2021].</a>
