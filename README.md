@@ -16,7 +16,7 @@ Because misinformation is somewhat imprecisely defined in the academic literatur
 
 <br>
 
-## Analyzing Hydroxychloroquine Tweets
+## Investigating Misinformation: Hydroxychloroquine Tweet Analysis
 
 <br>
 
