@@ -98,13 +98,15 @@ We see in Figure 08 that #hydroxychloroquine Tweets referencing #azithromycin or
 
 ### Temporal Analysis
 
+![Temporal Analysis](Images/temporal.jpg)
 
+This plot gives a temporal perspective of the number of English Tweets over time originating in the U.S. that contain the #hydroxychloroquine hashtag. The very first mention of the drug occurred in mid-March, with some notable activity in early- to mid-April of 2020. There is one prominent spike in activity with the #hydroxychloroquine hashtag, and that occurs on 18 May 2020, when then-President Donald Trump announced that he was taking hydroxychloroquine for an active COVID-19 infection. [[23]](#23)
 
 
 
 ## Hydroxychloroquine Twitter Network Analysis
 
-
+This network was created from the hydroxychloroquine Tweets using NetworkX. [[24]](#24) Nodes represent Twitter users and edges represent their interactions (replies, mentions, and retweets). These interactions do not capture manual retweets (usually indicated by the ‘RT’ indicator at the beginning of the Tweet text).
 
 <br>
 
@@ -153,3 +155,7 @@ We see in Figure 08 that #hydroxychloroquine Tweets referencing #azithromycin or
 <a id="21">[21]</a> “nltk/nltk: NLTK Source.” [Online]. Available: https://github.com/nltk/nltk. [Accessed: 07-May-2021].</a>
 
 <a id="22">[22]</a> C. D. Manning, P. Raghavan, and H. Schutze, “Introduction to Information Retrieval,” Cambridge University Press, 2009. [Online]. Available: https://nlp.stanford.edu/IR-book/html/htmledition/properties-of-naive-bayes-1.html. [Accessed: 18-Nov-2020].</a>
+
+<a id="23">[23]</a> N. Carvajal and K. Liptak, “Donald Trump says he is taking hydroxychloroquine though health experts question its effectiveness - CNNPolitics,” CNN, 19-May-2020. [Online]. Available: https://www.cnn.com/2020/05/18/politics/donald-trump-hydroxychloroquine-coronavirus/index.html. [Accessed: 09-May-2021].</a>
+
+<a id="24">[24]</a> “NetworkX — NetworkX documentation.” [Online]. Available: https://networkx.org/. [Accessed: 05-Mar-2021].</a>
