@@ -70,7 +70,7 @@ Prior to ranking the locations in this data, we first removed all emoji; made th
 
 From our work, the resulting dictionary of (key, value) = (standardized geolocation information, [processed user profile locations]) pairs characterizing the data prompted the question: If we were to flip the key, value pairs and consolidate the dictionary, would it reveal the number of user locations of the same origin that aren’t classified as such? We ran this mini-experiment, which revealed that our top 100 list of locations from the Twitter data was actually a top 72 list: almost 30 locations were still classified as distinct from their correct geolocation classifications, even in spite of the preprocessing and standardization.
 
-![USA Map of Profile Locations](Images/usa_locations.jpg)
+![USA Map of Profile Locations](Images/usa_map.jpg)
 
 
 
