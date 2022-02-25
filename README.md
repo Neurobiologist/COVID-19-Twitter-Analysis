@@ -31,7 +31,7 @@ There are several ways to elucidate a Tweet’s location of origin: (1) geo-tagg
 
 ![Top 100 Locations](Images/world_map.jpg)
 
-These may not necessarily be representative of the top locations where COVID-19 Tweets have originated. This is often due to the flexibility of user inputs resulting in variability in the raw location string (e.g., ‘United States’ and ‘USA’ are considered separate locations in the count). It was observed, however, that variability also arose though subtle variations in character or diacritic usage (‘Mexico’ vs. ‘México’),   the inclusion of differing combinations of city, state, and/or country information (‘San Francisco, CA’ vs. ‘San Francisco, CA, USA’), and the inclusion or exclusive use of flag emoji (‘Australia’ vs. ‘Australia’ vs. ‘’). We use this information to develop a location processing pipeline used in later visualizations.
+These may not necessarily be representative of the top locations where COVID-19 Tweets have originated. This is often due to the flexibility of user inputs resulting in variability in the raw location string (e.g., ‘United States’ and ‘USA’ are considered separate locations in the count). It was observed, however, that variability also arose though subtle variations in character or diacritic usage (‘Mexico’ vs. ‘México’),   the inclusion of differing combinations of city, state, and/or country information (‘San Francisco, CA’ vs. ‘San Francisco, CA, USA’), and the inclusion or exclusive use of flag emoji (‘Australia’ vs. ‘Australia :australia:’ vs. ‘:australia:’). We use this information to develop a location processing pipeline used in later visualizations.
 
 ## Preprocessing Pipeline
 
