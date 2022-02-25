@@ -2,8 +2,6 @@
 
 Coronavirus disease 2019 (COVID-19), caused by the novel coronavirus SARS-CoV-2, is an acute respiratory infection first reported in Wuhan, China, in late 2019. [[1]](#1) In the United States, public perception of the resulting pandemic has been shaped by a myriad of factors, including the federal response; official communications from government agencies; socio-demographic variables; state-level policies; partisan news media; and social media. [[2]](#2), [[3]](#3) The proliferation of misinformation in particular is detrimental to efforts in containing the spread of the virus, and it has been linked to effects such as vaccine hesitancy and reduced likelihood of compliance with public health guidelines. [[4]](#4) Better understanding the nature and etiology of COVID-19 public perception can aid in the development of more effective strategies to produce, target, and disseminate health information to diverse populations. Therefore, the goal of this project is to analyze publicly available Twitter data using sentiment analysis techniques and network analysis methods to generate insights into public perception of COVID-19 in the United States. 
 
- <br>
-
 Because misinformation is somewhat imprecisely defined in the academic literature, we chose to focus our analysis on hydroxychloroquine, which was introduced as a Twitter hashtag during initial data collection and was widely touted as a potential COVID-19 therapeutic despite study limitations and methodological concerns surrounding the initial supporting studies. [[5]](#5) Understanding the possible relationship between microblogging communications and public perception may provide insight into the types of communications that increase compliance with government recommendations and public health guidelines. Furthermore, characterizing “misinformation” and tracking its propagation through social networks can inform strategies to prevent the spread of inaccurate information during public health crises. 
 
 <br>
@@ -14,7 +12,7 @@ This dataset is composed of publicly-available Twitter data (Tweet IDs) associat
 
 We observe a slight delay in the addition of keywords after nomenclature is formally introduced, which suggests that the earliest Tweets captured in the dataset under a particular keyword might not be representative of some of the earliest topical Tweets. For instance, the World Health Organization (WHO) released a statement on 11 February 2020 declaring official names for the virus that causes the novel coronavirus disease as well as the disease it causes.[[7]](#7) These terms (COVID-19 and SARS-CoV-2) were not added to the keyword list until 16 February 2020 and 06 March 2020, respectively, and some derivatives of these terms (COVIDー19, COVID__19) were not added until later.[[8]](#8)
 
-[Raw Data](Images/raw_data.jpg)
+![Raw Data](Images/raw_data.jpg)
 
 The Tweet IDs were hydrated using Twarc, resulting in Tweet objects stored in gzipped JSON Lines files.[[10]](#9)
 
