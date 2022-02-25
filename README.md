@@ -64,6 +64,16 @@ Hashtags are user-generated entities that give context or provide keywords for a
 
 If we were to organize these hashtags into topics, half of them pertain to public health efforts to stop the spread of the virus, two of them are neutral, and two specifically reference Florida. Florida was notably an ‘epicenter of COVID-19 cases.’  [[16]](#16) We anticipate that the counts on these hashtags would be much higher with further consolidation and processing of the hashtag text.
 
+### Location Processing
+
+Prior to ranking the locations in this data, we first removed all emoji; made the text lowercase; replaced all accented characters using Unidecode (which has manual character mappings and more robust/intuitive handling of diacritical marks); and removed extraneous whitespace. [[17]](#17) A count of the preprocessed locations resulted in fewer misclassifications despite the heterogeneity in expression of user profile location data. We then used GeoPy to classify this processed data into standardized geolocations and store it using a Python dictionary.
+
+From our work, the resulting dictionary of (key, value) = (standardized geolocation information, [processed user profile locations]) pairs characterizing the data prompted the question: If we were to flip the key, value pairs and consolidate the dictionary, would it reveal the number of user locations of the same origin that aren’t classified as such? We ran this mini-experiment, which revealed that our top 100 list of locations from the Twitter data was actually a top 72 list: almost 30 locations were still classified as distinct from their correct geolocation classifications, even in spite of the preprocessing and standardization.
+
+![USA Map of Profile Locations](Images/usa_locations.jpg)
+
+
+
 
 
 ## Data Cleaning for Sentiment Analysis
@@ -111,3 +121,5 @@ If we were to organize these hashtags into topics, half of them pertain to publi
 <a id="15">[15]</a> M. Dredze, M. J. Paul, S. Bergsma, and H. Tran, “Carmen: A Twitter Geolocation System with Applications to Public Health.” </a>
 
 <a id="16">[16]</a> B. Sen-Crowe, M. Sutherland, M. McKenney, and A. Elkbuli, “The Florida COVID-19 mystery: Lessons to be learned,” American Journal of Emergency Medicine, vol. 0, no. 0. W.B. Saunders, 2020.</a>
+
+<a id="17">[17]</a>  S. Burke and T. Solc, “Unidecode · PyPI,” 2021. [Online]. Available: https://pypi.org/project/Unidecode/. [Accessed: 09-May-2021].</a>
