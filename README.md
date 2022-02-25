@@ -53,21 +53,14 @@ We hypothesized that January and February 2020 would have the lowest volume of T
 
 Hashtags are user-generated entities that give context or provide keywords for a Tweet. From our COVID-19 dataset, we determined the top 15 hashtags used from January –June 2020, then excluded hashtags containing the strings ‘covid’ or ‘coronavirus’ (because that is the basis of the dataset). The resulting eight hashtags were: 
 
-#WearAMask
-
-#CoverYourFreakinFace
-
-#pandemic
-
-#China
-
-#Fl
-
-#SocialDistancing
-
-#masks
-
-#TrumpKillsFlorida
+* #WearAMask
+* #CoverYourFreakinFace
+* #pandemic
+* #China
+* #Fl
+* #SocialDistancing
+* #masks
+* #TrumpKillsFlorida
 
 If we were to organize these hashtags into topics, half of them pertain to public health efforts to stop the spread of the virus, two of them are neutral, and two specifically reference Florida. Florida was notably an ‘epicenter of COVID-19 cases.’  [[16]](#16) We anticipate that the counts on these hashtags would be much higher with further consolidation and processing of the hashtag text.
 
