@@ -35,18 +35,47 @@ These may not necessarily be representative of the top locations where COVID-19 
 
 ## Preprocessing Pipeline
 
-Due to Twitter’s Terms of Service (TOS), the dataset from Chen, et. al., is provided as a collection of Tweet IDs.[[8]](#8)  It is important to note that the process of hydrating Tweets, or extracting the Tweet object from the Tweet ID, is lossy, so deleted or protected Tweets are no longer accessible through a Twitter API call. In version 1 of this dataset, it was estimated that ~6% of the Tweets were inaccessible at the time of hydration.[[8]](#8)
+Due to Twitter’s Terms of Service (TOS), the dataset from Chen, et. al., is provided as a collection of Tweet IDs. [[8]](#8)  It is important to note that the process of hydrating Tweets, or extracting the Tweet object from the Tweet ID, is lossy, so deleted or protected Tweets are no longer accessible through a Twitter API call. In version 1 of this dataset, it was estimated that ~6% of the Tweets were inaccessible at the time of hydration. [[8]](#8)
 
-Our aim was to create a dataset of English tweets originating from the United States. To achieve this, we captured all tweets with the English language tag (‘lang’ = ‘en’) and used that dataset to identify the best way to efficiently filter the Tweets based on location.
+Our aim was to create a dataset of English Tweets originating from the United States. To achieve this, we captured all Tweets with the English language tag (‘lang’ = ‘en’) and used that dataset to identify the best way to efficiently filter the Tweets based on location.
 
 ![Preprocessing Pipeline](Images/preprocessing_pipeline.jpg)
 
 ### Geolocating Tweets
 
-Carmen is a library developed at Johns Hopkins University for geolocating tweets for public health analysis. [[14]](#14), [[15]](#15) Given a tweet, Carmen will return Location objects that represent a physical location. Carmen uses both coordinates along with other information in a tweet to make geolocation decisions. This library is designed to infer locations from place, coordinate, and user profile information along an Earth --> Country --> State --> County --> City hierarchy with the use of frequency statistics and known aliases. [[15]](#15) This library allowed us to isolate more Tweets for our USA dataset than filtering based on explicitly available Tweet JSON information alone.
+Carmen is a library developed at Johns Hopkins University for geolocating tweets for public health analysis. [[14]](#14), [[15]](#15) Given a Tweet, Carmen will return Location objects that represent a physical location. Carmen uses both coordinates along with other information in a Tweet to make geolocation decisions. This library is designed to infer locations from place, coordinate, and user profile information along an Earth --> Country --> State --> County --> City hierarchy with the use of frequency statistics and known aliases. [[15]](#15) This library allowed us to isolate more Tweets for our USA dataset than filtering based on explicitly available Tweet JSON information alone.
+
+### Finalized Dataset
+
+The finalized dataset consisted of 17,989,581 English Tweets likely originating from the United States. These data represent approximately 8% of the original dataset.
+
+We hypothesized that January and February 2020 would have the lowest volume of Tweet data per unit time containing COVID-19 keywords. English is the most prominent language captured in this dataset (representing over 60% of all Tweets as of version 9), but non-English speaking countries were most affected in the early months of the pandemic. [[6]](#6) In addition, the WHO hesitated to declare COVID-19 a pandemic until almost mid-March, so we predicted that Tweet volume would begin to rise in March 2020. These predictions were confirmed upon further analysis.
+
+Hashtags are user-generated entities that give context or provide keywords for a Tweet. From our COVID-19 dataset, we determined the top 15 hashtags used from January –June 2020, then excluded hashtags containing the strings ‘covid’ or ‘coronavirus’ (because that is the basis of the dataset). The resulting eight hashtags were: 
+
+#WearAMask
+
+#CoverYourFreakinFace
+
+#pandemic
+
+#China
+
+#Fl
+
+#SocialDistancing
+
+#masks
+
+#TrumpKillsFlorida
+
+If we were to organize these hashtags into topics, half of them pertain to public health efforts to stop the spread of the virus, two of them are neutral, and two specifically reference Florida. Florida was notably an ‘epicenter of COVID-19 cases.’  [[16]](#16) We anticipate that the counts on these hashtags would be much higher with further consolidation and processing of the hashtag text.
+
 
 
 ## Data Cleaning for Sentiment Analysis
+
+
 
 ## Investigating Misinformation: Hydroxychloroquine Tweet Analysis
 
@@ -84,6 +113,8 @@ Carmen is a library developed at Johns Hopkins University for geolocating tweets
 
 <a id="13">[13]</a> “Folium — Folium 0.12.1 documentation.” [Online]. Available: https://python-visualization.github.io/folium/. [Accessed: 09-May-2021].</a>
 
-<a id="14">[14]</a>“mdredze/carmen-python: Geolocation for Twitter.” [Online]. Available: https://github.com/mdredze/carmen-python. [Accessed: 09-May-2021].</a>
+<a id="14">[14]</a> “mdredze/carmen-python: Geolocation for Twitter.” [Online]. Available: https://github.com/mdredze/carmen-python. [Accessed: 09-May-2021].</a>
 
-<a id="15">[15]</a>M. Dredze, M. J. Paul, S. Bergsma, and H. Tran, “Carmen: A Twitter Geolocation System with Applications to Public Health.” </a>
+<a id="15">[15]</a> M. Dredze, M. J. Paul, S. Bergsma, and H. Tran, “Carmen: A Twitter Geolocation System with Applications to Public Health.” </a>
+
+<a id="16">[16]</a> B. Sen-Crowe, M. Sutherland, M. McKenney, and A. Elkbuli, “The Florida COVID-19 mystery: Lessons to be learned,” American Journal of Emergency Medicine, vol. 0, no. 0. W.B. Saunders, 2020.</a>
