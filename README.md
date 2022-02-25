@@ -35,6 +35,16 @@ These may not necessarily be representative of the top locations where COVID-19 
 
 ## Preprocessing Pipeline
 
+Due to Twitter’s Terms of Service (TOS), the dataset from Chen, et. al., is provided as a collection of Tweet IDs.[[8]](#8)  It is important to note that the process of hydrating Tweets, or extracting the Tweet object from the Tweet ID, is lossy, so deleted or protected Tweets are no longer accessible through a Twitter API call. In version 1 of this dataset, it was estimated that ~6% of the Tweets were inaccessible at the time of hydration.[[8]](#8)
+
+Our aim was to create a dataset of English tweets originating from the United States. To achieve this, we captured all tweets with the English language tag (‘lang’ = ‘en’) and used that dataset to identify the best way to efficiently filter the Tweets based on location.
+
+![Preprocessing Pipeline](Images/preprocessing_pipeline.jpg)
+
+### Geolocating Tweets
+
+Carmen is a library developed at Johns Hopkins University for geolocating tweets for public health analysis. [[14]](#14), [[15]](#15) Given a tweet, Carmen will return Location objects that represent a physical location. Carmen uses both coordinates along with other information in a tweet to make geolocation decisions. This library is designed to infer locations from place, coordinate, and user profile information along an Earth --> Country --> State --> County --> City hierarchy with the use of frequency statistics and known aliases. [[15]](#15) This library allowed us to isolate more Tweets for our USA dataset than filtering based on explicitly available Tweet JSON information alone.
+
 
 ## Data Cleaning for Sentiment Analysis
 
@@ -64,7 +74,7 @@ These may not necessarily be representative of the top locations where COVID-19 
 
 <a id="8">[8]</a> E. Chen, E. Lerman, and K. Ferrara, “COVID-19-TweetIDs,” 2020. [Online]. Available: https://github.com/echen102/COVID-19-TweetIDs. [Accessed: 05-May-2021].</a>
 
-<a id="9">[9]</a>  “DocNow/twarc: A command line tool (and Python library) for archiving Twitter JSON.” [Online]. Available: https://github.com/DocNow/twarc. [Accessed: 07-May-2021].</a>
+<a id="9">[9]</a> “DocNow/twarc: A command line tool (and Python library) for archiving Twitter JSON.” [Online]. Available: https://github.com/DocNow/twarc. [Accessed: 07-May-2021].</a>
 
 <a id="10">[10]</a> L. Sloan and J. Morgan, “Who tweets with their location? Understanding the relationship between demographic characteristics and the use of geoservices and geotagging on twitter,” PLoS One, vol. 10, no. 11, Nov. 2015.</a>
 
@@ -72,4 +82,8 @@ These may not necessarily be representative of the top locations where COVID-19 
 
 <a id="12">[12]</a> “Welcome to GeoPy’s documentation! — GeoPy 2.1.0 documentation.” [Online]. Available: https://geopy.readthedocs.io/en/stable/. [Accessed: 09-May-2021].</a>
 
-<a id="13">[13]</a>“Folium — Folium 0.12.1 documentation.” [Online]. Available: https://python-visualization.github.io/folium/. [Accessed: 09-May-2021].</a>
+<a id="13">[13]</a> “Folium — Folium 0.12.1 documentation.” [Online]. Available: https://python-visualization.github.io/folium/. [Accessed: 09-May-2021].</a>
+
+<a id="14">[14]</a>“mdredze/carmen-python: Geolocation for Twitter.” [Online]. Available: https://github.com/mdredze/carmen-python. [Accessed: 09-May-2021].</a>
+
+<a id="15">[15]</a>M. Dredze, M. J. Paul, S. Bergsma, and H. Tran, “Carmen: A Twitter Geolocation System with Applications to Public Health.” </a>
