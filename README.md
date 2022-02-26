@@ -108,6 +108,14 @@ This plot gives a temporal perspective of the number of English Tweets over time
 
 This network was created from the hydroxychloroquine Tweets using NetworkX. [[24]](#24) Nodes represent Twitter users and edges represent their interactions (replies, mentions, and retweets). These interactions do not capture manual retweets (usually indicated by the ‘RT’ indicator at the beginning of the Tweet text).
 
+![USA Network](Images/usa-network.jpg)
+
+This network consists of 10,352 nodes connected by 9880 edges. The max degree (number of connections from a single node) is 717, but the average degree is approximately 1.909 (mode = 1). In this graph, there is 1136 connected components. Applying sentiment analysis to each node produced in the COVID-19 misinformation networks produces a network graph similar to those found in the literature.
+
+![USA Network with Sentiment](Images/network-usa-update-spring.jpg)
+
+![USA Largest Subnetwork](Images/subnetwork-usa-update-spring.jpg)
+
 <br>
 
 ## References
