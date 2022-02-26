@@ -147,13 +147,13 @@ def evaluate(score):
 def mkr(interp):
     ''' Assign marker based on interpretation '''
     if interp == '++':
-        return 'blue'
+        return 'navy'
     if interp == '+':
-        return 'teal'
+        return 'skyblue'
     if interp == ' ':
         return 'moccasin'
     if interp == '-':
-        return 'mistyrose'
+        return 'lightcoral'
     return 'red'
 
 
@@ -258,11 +258,11 @@ def main():
     #    lambda row: sentiment_analysis(row['preprocessed']), axis=1)
     #tweet_df['interpretation'] = tweet_df.apply(
     #                        lambda row: evaluate(row['sentiment_score']), axis=1)
-    tweet_df['marker_color'] = tweet_df.apply(
-                            lambda row: mkr(row['interpretation']), axis=1)
+    #tweet_df['marker_color'] = tweet_df.apply(
+    #                        lambda row: mkr(row['interpretation']), axis=1)
     
     # Save pkl file
-    tweet_df.to_pickle('usa_sentiments_df.pkl')
+    #tweet_df.to_pickle('usa_sentiments_df.pkl')
     
     # Build Network Graph
     network = nx.Graph()
@@ -288,16 +288,16 @@ def main():
     summarize_networks(network, subnetwork, 'network_analysis-expanded-update-noRTorUM.txt')
             
     
-    #plt.figure(figsize=(50,50))
-    #pos = nx.spectral_layout(network)
-    #nx.draw(network, node_color=colors)
-    #plt.savefig('network-usa-update-spectral.jpg')
+    plt.figure(figsize=(50,50))
+    pos = nx.spring_layout(network)
+    nx.draw(network, pos=pos, node_color=colors)
+    plt.savefig('network-usa-update-spring.jpg')
     
     plt.figure(figsize=(50,50))
     pos2 = nx.spring_layout(subnetwork)
     nx.draw(subnetwork, pos=pos2, node_color=subnet_colors)
             #node_size=[v * 1000 for v in subnet_degrees.values()])
-    plt.savefig('test.jpg') #'subnet_spring_um_replies.jpg')
+    plt.savefig('subnetwork-usa-update-spring.jpg')
 
 if __name__ == "__main__":
     main()
