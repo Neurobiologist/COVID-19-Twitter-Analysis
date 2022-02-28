@@ -10,6 +10,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 from scipy import stats
+from wordcloud import WordCloud
 
 # Pandas Settings
 pd.set_option('max_colwidth', 280)  # Capture full tweet
@@ -243,13 +244,23 @@ def summarize_networks(network, subnetwork, filename):
         file_out.write('Most frequent degree = {}\n'.format(stats.mode(sub_degrees)[0][0]))
         file_out.write('# Connected Components = {}\n'.format(nx.number_connected_components(subnetwork)))
     
-
+def create_wordcloud(content, max_words, width, height, out_file):
+    ''' Create wordcloud from content'''
+    wordcloud = WordCloud(background_color="white", max_words=max_words, width=width, height=height)
+    wordcloud.generate(' '.join(content))
+    wordcloud.to_file(out_file)
+    
     
     
 def main():
 	# Load pkl file
     tweet_df = pd.read_pickle('usa_sentiments_df.pkl')
     print('Loaded data.')
+    
+    # Create wordcloud
+    create_wordcloud(tweet_df['preprocessed'], 5000, 1600, 800, 'wordcloud.jpg')
+
+    
     
     # Sentiment Analysis
     #tweet_df['preprocessed'] = tweet_df.apply(
@@ -264,6 +275,7 @@ def main():
     # Save pkl file
     #tweet_df.to_pickle('usa_sentiments_df.pkl')
     
+    '''
     # Build Network Graph
     network = nx.Graph()
     colors = []
@@ -271,33 +283,44 @@ def main():
     blank_nodes = []
     subnet_blank_nodes = []
     tweet_df['marker_color'] = tweet_df['marker_color'].astype('str')
+    copy_colors = []
+    copy_blank_nodes = []
     
     # Primary Network
     build_network(network, tweet_df)
     colorize_network(network, tweet_df, colors, blank_nodes)
     prune_network(network, blank_nodes)
+    
+    # Prune isolated nodes
+    network_copy = network.copy()
+    network_copy.remove_nodes_from(nx.isolates(network))
+    colorize_network(network_copy, tweet_df, copy_colors, copy_blank_nodes)
+    prune_network(network_copy, copy_blank_nodes)
             
     # Largest Subnetwork   
     subnetwork = network.subgraph(max(nx.connected_components(network), key=len))
     colorize_network(subnetwork, tweet_df, subnet_colors, subnet_blank_nodes)
-    prune_network(subnetwork, subnet_blank_nodes)    
-    
-
+    prune_network(subnetwork, subnet_blank_nodes)
     
     # Generate summary of network
-    summarize_networks(network, subnetwork, 'network_analysis-expanded-update-noRTorUM.txt')
+    summarize_networks(network, subnetwork, 'network_analysis-expanded-update.txt')
             
-    
+    # Plot Figures
     plt.figure(figsize=(50,50))
-    pos = nx.spring_layout(network)
+    pos = nx.kamada_kawai_layout(network) #nx.spring_layout(network)
     nx.draw(network, pos=pos, node_color=colors)
-    plt.savefig('network-usa-update-spring.jpg')
+    plt.savefig('network-usa-update-experiment.jpg')
     
     plt.figure(figsize=(50,50))
-    pos2 = nx.spring_layout(subnetwork)
+    copy_pos = nx.kamada_kawai_layout(network_copy) #nx.spring_layout(network_copy)
+    nx.draw(network_copy, pos=copy_pos, node_color=copy_colors)
+    plt.savefig('network-usa-update-pruned-experiment.jpg')
+    
+    plt.figure(figsize=(50,50))
+    pos2 = nx.kamada_kawai_layout(subnetwork) #nx.spring_layout(subnetwork)
     nx.draw(subnetwork, pos=pos2, node_color=subnet_colors)
-            #node_size=[v * 1000 for v in subnet_degrees.values()])
-    plt.savefig('subnetwork-usa-update-spring.jpg')
+    plt.savefig('subnetwork-usa-update-experiment.jpg')
+    '''
 
 if __name__ == "__main__":
     main()
