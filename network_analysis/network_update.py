@@ -253,29 +253,31 @@ def create_wordcloud(content, max_words, width, height, out_file):
     
     
 def main():
+    
+    # Tweet classification
+    classification = 'hcq'
+    
 	# Load pkl file
-    tweet_df = pd.read_pickle('usa_sentiments_df.pkl')
+    tweet_df = pd.read_pickle('hcq_tweets_df.pkl')
     print('Loaded data.')
-    
-    # Create wordcloud
-    create_wordcloud(tweet_df['preprocessed'], 5000, 1600, 800, 'wordcloud.jpg')
-
-    
+       
     
     # Sentiment Analysis
-    #tweet_df['preprocessed'] = tweet_df.apply(
-    #    lambda row: preprocess_tweet(row['tweet_text']), axis=1)
-    #tweet_df['sentiment_score'] = tweet_df.apply(
-    #    lambda row: sentiment_analysis(row['preprocessed']), axis=1)
-    #tweet_df['interpretation'] = tweet_df.apply(
-    #                        lambda row: evaluate(row['sentiment_score']), axis=1)
-    #tweet_df['marker_color'] = tweet_df.apply(
-    #                        lambda row: mkr(row['interpretation']), axis=1)
+    tweet_df['preprocessed'] = tweet_df.apply(
+        lambda row: preprocess_tweet(row['tweet_text']), axis=1)
+    tweet_df['sentiment_score'] = tweet_df.apply(
+        lambda row: sentiment_analysis(row['preprocessed']), axis=1)
+    tweet_df['interpretation'] = tweet_df.apply(
+                            lambda row: evaluate(row['sentiment_score']), axis=1)
+    tweet_df['marker_color'] = tweet_df.apply(
+                            lambda row: mkr(row['interpretation']), axis=1)
     
     # Save pkl file
-    #tweet_df.to_pickle('usa_sentiments_df.pkl')
+    tweet_df.to_pickle('%s_sentiments_df.pkl' % classification)
     
-    '''
+    # Create wordcloud
+    create_wordcloud(tweet_df['preprocessed'], 5000, 1600, 800, ('%s_wordcloud.jpg' % classification))
+    
     # Build Network Graph
     network = nx.Graph()
     colors = []
@@ -303,24 +305,24 @@ def main():
     prune_network(subnetwork, subnet_blank_nodes)
     
     # Generate summary of network
-    summarize_networks(network, subnetwork, 'network_analysis-expanded-update.txt')
+    summarize_networks(network, subnetwork, 'network_analysis-%s.txt' % classification)
             
     # Plot Figures
     plt.figure(figsize=(50,50))
-    pos = nx.kamada_kawai_layout(network) #nx.spring_layout(network)
+    pos = nx.spring_layout(network) #kamada_kawai_layout(network) #nx.spring_layout(network)
     nx.draw(network, pos=pos, node_color=colors)
-    plt.savefig('network-usa-update-experiment.jpg')
+    plt.savefig('network-%s-update-experiment.jpg' % classification)
     
     plt.figure(figsize=(50,50))
-    copy_pos = nx.kamada_kawai_layout(network_copy) #nx.spring_layout(network_copy)
+    copy_pos = nx.spring_layout(network_copy) #nx.spring_layout(network_copy)
     nx.draw(network_copy, pos=copy_pos, node_color=copy_colors)
-    plt.savefig('network-usa-update-pruned-experiment.jpg')
+    plt.savefig('network-%s-update-pruned-experiment.jpg' % classification)
     
     plt.figure(figsize=(50,50))
-    pos2 = nx.kamada_kawai_layout(subnetwork) #nx.spring_layout(subnetwork)
+    pos2 = nx.spring_layout(subnetwork) #nx.spring_layout(subnetwork)
     nx.draw(subnetwork, pos=pos2, node_color=subnet_colors)
-    plt.savefig('subnetwork-usa-update-experiment.jpg')
-    '''
+    plt.savefig('subnetwork-%s-update-experiment.jpg' % classification)
+
 
 if __name__ == "__main__":
     main()
